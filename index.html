@@ -44,11 +44,22 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16p
 
 .stepper{display:flex;gap:8px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
 .stepper li{flex:1 1 100px;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted)}
-.stepper li .bar{height:3px;border-radius:2px;background:#D5D8E0}
-.stepper li.done .bar,.stepper li.now .bar{background:var(--blue)}
+.stepper li{transition:color .3s ease}
+.stepper li .bar{height:3px;border-radius:2px;background:#D5D8E0;position:relative;overflow:hidden}
+.stepper li .bar::after{content:"";position:absolute;inset:0;background:var(--blue);border-radius:2px;transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.2,.7,.2,1) .1s}
+.stepper li.done .bar::after,.stepper li.now .bar::after{transform:scaleX(1)}
 .stepper li.now{color:var(--ink);font-weight:600}
 
-.card{background:var(--surface);border-radius:16px;box-shadow:0 1px 2px rgba(11,11,15,.05),0 10px 30px rgba(17,109,255,.07);padding:clamp(22px,4.5vw,48px);display:flex;flex-direction:column;gap:26px;min-width:0}
+/* Step transitions: old content eases out, new content slides in with a short stagger, card height glides. */
+@keyframes stepIn{from{opacity:0;transform:translate3d(var(--dx,28px),0,0)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0;transform:translate3d(0,6px,0)}to{opacity:1;transform:none}}
+.enter>*{animation:stepIn .5s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0) * 50ms)}
+.notes.enter>*{animation-name:fadeIn;animation-duration:.4s;animation-delay:calc(80ms + var(--i,0) * 35ms)}
+.leaving>*{opacity:0;transform:translate3d(var(--dx-out,-16px),0,0);transition:opacity .18s ease,transform .18s ease}
+.notes.leaving>*{transform:none}
+@media (prefers-reduced-motion:reduce){.enter>*,.notes.enter>*{animation:none}.leaving>*{transition:none}.stepper li .bar::after{transition:none}}
+
+.card{transition:background-color .45s ease,box-shadow .45s ease;background:var(--surface);border-radius:16px;box-shadow:0 1px 2px rgba(11,11,15,.05),0 10px 30px rgba(17,109,255,.07);padding:clamp(22px,4.5vw,48px);display:flex;flex-direction:column;gap:26px;min-width:0}
 .card.pricing{background:var(--lav);box-shadow:none}
 .eyebrow{font-size:15px;color:var(--muted)}
 h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,5vw,54px);line-height:1.08;letter-spacing:-.025em;margin:0;text-wrap:balance}
@@ -289,7 +300,9 @@ function total(){
 function priceHTML(v){const [i,c]=v.toFixed(2).split(".");return `<div class="price"><span class="cur">$</span><span class="int">${i}</span><span class="cents">.${c}</span><span class="per">/mo</span></div>`}
 
 function renderStepper(){
-  $("#stepper").innerHTML=STEPS.map((s,i)=>`<li class="${i<S.step?"done":i===S.step?"now":""}" ${i===S.step?'aria-current="step"':""}><span class="bar"></span>${s}</li>`).join("");
+  const ol=$("#stepper");
+  if(ol.children.length===STEPS.length){[...ol.children].forEach((li,i)=>{li.className=i<S.step?"done":i===S.step?"now":"";if(i===S.step)li.setAttribute("aria-current","step");else li.removeAttribute("aria-current")});return}
+  ol.innerHTML=STEPS.map((s,i)=>`<li class="${i<S.step?"done":i===S.step?"now":""}" ${i===S.step?'aria-current="step"':""}><span class="bar"></span>${s}</li>`).join("");
 }
 function renderNotes(){
   const n=NOTES[S.step];
@@ -304,8 +317,15 @@ function actions(nextLabel,canNext,skip){
   return `<div class="actions">${S.step>0?`<button class="btn ghost" id="back">Back</button>`:"<span></span>"}<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${skip?`<button class="btn link" id="skip">Skip</button>`:""}<button class="btn primary" id="next" ${canNext?"":"disabled"}>${nextLabel}</button></div></div>`;
 }
 
-function render(){
-  renderStepper(); renderNotes();
+function stagger(el,entering){
+  el.classList.remove("enter");
+  if(!entering) return;
+  [...el.children].forEach((c,i)=>c.style.setProperty("--i",i));
+  void el.offsetWidth; el.classList.add("enter");
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove("enter"),1200);
+}
+function render(entering){
+  renderStepper(); renderNotes(); stagger($("#notes"),entering);
   const st=$("#stage"); st.classList.toggle("pricing",S.step===3);
   let h="";
   if(S.step===0){
@@ -370,10 +390,30 @@ function render(){
     <ul class="checklist">${items.map(i=>`<li class="${i.c}"><span class="st"></span><div><b>${i.t}</b><span class="sub">${esc(i.s)}</span></div>${i.tag?`<span class="tag ${i.next?"next":i.c}">${i.tag}</span>`:"<span></span>"}</li>`).join("")}</ul>
     <div class="actions"><button class="btn ghost" id="restart">Start over</button><button class="btn primary" id="cta">${hasSite()?"Publish my website":"Download logo files"}</button></div>`;
   }
-  st.innerHTML=h; bind();
+  st.innerHTML=h; stagger(st,entering); bind();
 }
 
-function go(d){S.step=Math.max(0,Math.min(4,S.step+d));render();window.scrollTo({top:0,behavior:"smooth"})}
+let moving=false;
+function go(d){
+  const next=Math.max(0,Math.min(STEPS.length-1,S.step+d));
+  if(moving||next===S.step) return;
+  const st=$("#stage"), notes=$("#notes");
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  st.style.setProperty("--dx",d>0?"28px":"-28px");
+  st.style.setProperty("--dx-out",d>0?"-16px":"16px");
+  const swap=()=>{
+    const oldH=st.offsetHeight;
+    st.classList.remove("leaving"); notes.classList.remove("leaving");
+    S.step=next; render(!reduce);
+    const newH=st.offsetHeight;
+    if(!reduce&&oldH!==newH){st.style.overflow="hidden";const a=st.animate([{height:oldH+"px"},{height:newH+"px"}],{duration:420,easing:"cubic-bezier(.2,.7,.2,1)"});a.onfinish=a.oncancel=()=>{st.style.overflow=""}}
+    if(window.scrollY>0) window.scrollTo({top:0,behavior:reduce?"auto":"smooth"});
+    moving=false;
+  };
+  if(reduce){swap();return}
+  moving=true; st.classList.add("leaving"); notes.classList.add("leaving");
+  setTimeout(swap,190);
+}
 function bind(){
   const q=(s,f)=>document.querySelectorAll(s).forEach(e=>e.addEventListener("click",()=>f(e)));
   const n=$("#next"),b=$("#back"),sk=$("#skip");
@@ -393,7 +433,7 @@ function bind(){
   if(ad&&!ad.disabled) ad.onchange=()=>{S.addons.domain=ad.checked;render()};
   if(ae) ae.onchange=()=>{S.addons.email=ae.checked;render()};
   if(aa) aa.onchange=()=>{S.addons.agent=aa.checked;render()};
-  const r=$("#restart"); if(r) r.onclick=()=>{Object.assign(S,{step:0,stage:null,logo:null,logoType:"all",tier:null,addons:{domain:false,email:false,agent:false}});render()};
+  const r=$("#restart"); if(r) r.onclick=()=>{Object.assign(S,{stage:null,logo:null,logoType:"all",tier:null,addons:{domain:false,email:false,agent:false}});go(-S.step)};
   const c=$("#cta"); if(c) c.onclick=()=>{c.textContent="Done in the real product";c.disabled=true};
 }
 $("#notesToggle").addEventListener("change",e=>{$("#notes").hidden=!e.target.checked;$("#grid").classList.toggle("no-notes",!e.target.checked)});
