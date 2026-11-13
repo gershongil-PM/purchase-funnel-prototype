@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Concept prototype of a small-business purchase funnel: business details, logo, plan and billing, launch checklist, with PM notes for each step.">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Open for Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700;800&family=Wix+Madefor+Text:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Inter:wght@600&family=Fraunces:opsz,wght@9..144,600&display=swap">
+<style>
+/* Layout: website-builder look. White nav bar, soft blue haze behind the flow, one card per step, PM notes rail on the right.
+   Deliberately light-only, like the builder sites it follows. */
+:root{
+  color-scheme:light;
+  --bg:#FFFFFF; --surface:#FFFFFF; --ink:#0B0B0F; --muted:#585C6E; --line:#E2E4EA; --soft:#F4F5F8;
+  --blue:#116DFF; --blue-hover:#0F5FE0;
+  --purple:#4D2FE0; --lav:#E9E6FF; --lav-2:#F4F2FF;
+  --good:#0F9D58; --good-soft:#E3F5EB;
+  --display:"Wix Madefor Display", "Helvetica Neue", Arial, sans-serif;
+  --body:"Wix Madefor Text", "Helvetica Neue", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(60% 420px at 50% 0%,#D9F1FF 0%,rgba(217,241,255,0) 100%),radial-gradient(40% 360px at 85% 120px,#DCE8FF 0%,rgba(220,232,255,0) 100%);
+  background-repeat:no-repeat}
+.nav{background:var(--surface);border-bottom:1px solid var(--line);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px}
+.nav-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;font-size:24px;letter-spacing:-.03em;display:flex;align-items:baseline;gap:10px}
+.brand small{font-family:var(--body);font-weight:500;font-size:12px;color:var(--muted);letter-spacing:0}
+.switch{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--ink);cursor:pointer;user-select:none}
+.switch input{appearance:none;width:40px;height:22px;border-radius:999px;background:#C9CCD6;position:relative;cursor:pointer;transition:background .2s;margin:0}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#FFFFFF;transition:transform .2s}
+.switch input:checked{background:var(--blue)}
+.switch input:checked::after{transform:translateX(18px)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+.page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:24px;align-items:start}
+.grid.no-notes{grid-template-columns:minmax(0,1fr)}
+@media (max-width:960px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+.stepper{display:flex;gap:8px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.stepper li{flex:1 1 100px;display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted)}
+.stepper li .bar{height:3px;border-radius:2px;background:#D5D8E0}
+.stepper li.done .bar,.stepper li.now .bar{background:var(--blue)}
+.stepper li.now{color:var(--ink);font-weight:600}
+
+.card{background:var(--surface);border-radius:16px;box-shadow:0 1px 2px rgba(11,11,15,.05),0 10px 30px rgba(17,109,255,.07);padding:clamp(22px,4.5vw,48px);display:flex;flex-direction:column;gap:26px;min-width:0}
+.card.pricing{background:var(--lav);box-shadow:none}
+.eyebrow{font-size:15px;color:var(--muted)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,5vw,54px);line-height:1.08;letter-spacing:-.025em;margin:0;text-wrap:balance}
+.lede{font-size:18px;color:var(--ink);margin:0;max-width:58ch}
+.field{display:flex;flex-direction:column;gap:8px;font-size:15px;font-weight:500}
+.field .opt-l{font-weight:400;color:var(--muted)}
+input[type=text]{font:inherit;font-size:17px;padding:13px 16px;border-radius:6px;border:1px solid #B9BDC9;background:var(--surface);color:var(--ink)}
+input[type=text]:hover{border-color:var(--ink)}
+input[type=text]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{font:inherit;font-size:15px;padding:9px 18px;border-radius:999px;border:1px solid #B9BDC9;background:var(--surface);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#FFFFFF}
+
+.opts{display:grid;gap:12px}
+.opt{font:inherit;text-align:left;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:center;padding:18px 20px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--ink)}
+.opt .radio{grid-row:span 2;width:20px;height:20px;border-radius:50%;border:1.5px solid #9A9EAD}
+.opt[aria-checked="true"]{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.opt[aria-checked="true"] .radio{border-color:var(--blue);box-shadow:inset 0 0 0 4px #FFFFFF;background:var(--blue)}
+.opt b{font-weight:600;font-size:17px}
+.opt .sub{color:var(--muted);font-size:14px}
+
+.typefilter{display:flex;gap:10px;flex-wrap:wrap}
+.logos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.logo-wrap{display:flex;flex-direction:column;gap:8px;min-width:0}
+.logo{border:1px solid var(--line);border-radius:12px;background:#FFFFFF;padding:12px;cursor:pointer;aspect-ratio:4/3;display:grid;place-items:center;max-width:100%}
+.logo:hover{border-color:var(--ink)}
+.logo svg{width:100%;height:100%}
+.logo[aria-checked="true"]{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.logo-type{font-size:13px;color:var(--muted)}
+.mock-label{font-size:14px;color:var(--muted)}
+.mockups{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.mock-card{width:230px;max-width:100%;aspect-ratio:1.75;border-radius:8px;background:#FFFFFF;border:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:12px;box-shadow:0 4px 14px rgba(11,11,15,.06)}
+.mock-card .m{width:72px;height:54px;flex:none}
+.mock-card small{display:block;font-size:10px;color:var(--muted)}
+.mock-avatar{width:66px;height:66px;border-radius:50%;overflow:hidden;border:1px solid var(--line);background:#FFFFFF;flex:none}
+
+.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.btn{font:inherit;font-size:16px;font-weight:500;border-radius:999px;padding:13px 30px;cursor:pointer;border:1px solid transparent}
+.btn.primary{background:var(--ink);color:#FFFFFF}
+.btn.primary:hover:not(:disabled){background:#2A2A33}
+.btn.primary:disabled{opacity:.35;cursor:not-allowed}
+.btn.ghost{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn.link{background:transparent;color:var(--ink);text-decoration:underline;padding-inline:8px}
+
+/* Pricing step */
+.mb-banner{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:500}
+.p-head{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.includes{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-size:16px}
+.includes span{display:inline-flex;align-items:center;gap:6px}
+.billing{display:flex;justify-content:center}
+.seg{display:inline-flex;background:var(--surface);border-radius:999px;padding:4px;border:1px solid #CFCAF5}
+.seg button{font:inherit;font-size:15px;border:0;border-radius:999px;padding:8px 18px;background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#FFFFFF}
+.savebadge{align-self:flex-start;background:#E4F8B0;color:#116B2E;font-weight:700;font-size:13px;letter-spacing:.02em;padding:4px 10px;border-radius:4px;white-space:nowrap;font-variant-numeric:tabular-nums;margin-top:-4px}
+.seg{flex-wrap:wrap;justify-content:center}
+.seg .off{font-size:12px;font-weight:600;color:var(--purple);margin-left:6px}
+.seg button[aria-pressed="true"] .off{color:#CFC6FF}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;align-items:stretch}
+.tier{background:var(--surface);border-radius:16px;padding:22px 24px 26px;display:flex;flex-direction:column;gap:14px;border:2px solid transparent;min-width:0}
+.tier.is-rec,.tier.is-sel{border-color:var(--purple)}
+.tier .rec{min-height:34px;border-radius:6px;display:grid;place-items:center;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--purple);background:var(--lav)}
+.tier .rec.empty{background:transparent}
+.tier h3{font-family:var(--display);font-weight:400;font-size:30px;letter-spacing:-.02em;margin:0;line-height:1.1}
+.tier .for{margin:-8px 0 0;font-size:15px;color:var(--ink)}
+.price{display:flex;align-items:baseline;font-family:var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin-top:6px}
+.price .cur{font-size:22px;font-weight:500}
+.price .int{font-size:48px;font-weight:500;line-height:1}
+.price .cents{font-size:24px;font-weight:500}
+.price .per{font-family:var(--body);font-size:16px;margin-left:4px;letter-spacing:0}
+.billed{font-size:14px;color:var(--muted);margin-top:-8px}
+.select{font:inherit;font-size:16px;padding:11px;border-radius:4px;border:1px solid var(--ink);background:var(--surface);color:var(--ink);cursor:pointer;width:100%}
+.select:hover{background:var(--soft)}
+.tier.is-rec .select,.tier.is-sel .select{background:var(--purple);border-color:var(--purple);color:#FFFFFF}
+.tier.is-rec .select:hover,.tier.is-sel .select:hover{background:#3E22CC}
+.recbox{border:1px solid #DCD6FB;background:var(--lav-2);border-radius:8px;padding:12px 14px;font-size:14px;color:var(--ink)}
+.recbox b{display:flex;gap:8px;color:var(--purple);font-weight:600;font-size:15px;margin-bottom:4px}
+.feats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;font-size:15px}
+.feats li{display:grid;grid-template-columns:18px 1fr;gap:12px;align-items:start}
+.feats li b{font-weight:700}
+.feats li.skip{color:var(--muted);text-decoration:line-through}
+.feats li.skip svg{opacity:.4}
+.ico{width:18px;height:18px;margin-top:2px;flex:none}
+.gift{width:17px;height:17px;vertical-align:-3px;margin-left:6px}
+.addons{background:var(--surface);border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;gap:6px}
+.addons h3{font-family:var(--display);font-weight:500;font-size:20px;margin:0 0 2px}
+.addons .hint{font-size:14px;color:var(--muted);margin:0 0 8px}
+.addon{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--line);font-size:15px;cursor:pointer}
+.addon input{width:18px;height:18px;accent-color:var(--purple);margin:0;flex:none}
+.addon .p{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.addon .p.free{color:var(--good);font-weight:600}
+.checkout{background:var(--surface);border-radius:16px;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.checkout .amt{font-family:var(--display);font-size:28px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.checkout .amt small{font-family:var(--body);font-size:14px;color:var(--muted);letter-spacing:0}
+.fine{font-size:13px;color:var(--muted);margin:0;text-align:center}
+
+/* Launch step */
+.progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
+.progress .track{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.progress .fill{height:100%;background:var(--blue);border-radius:3px}
+.checklist{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0}
+.checklist li{display:grid;grid-template-columns:28px 1fr auto;gap:14px;align-items:center;padding:16px 18px;border:1px solid var(--line);border-radius:12px}
+.checklist .st{width:24px;height:24px;border-radius:50%;border:1.5px solid #B9BDC9;display:grid;place-items:center}
+.checklist li.ok .st{background:var(--good);border-color:var(--good)}
+.checklist li.ok .st::after{content:"";width:9px;height:5px;border-left:2px solid #FFFFFF;border-bottom:2px solid #FFFFFF;transform:rotate(-45deg);margin-top:-2px}
+.checklist li.wip .st{border-color:var(--blue);border-top-color:transparent;animation:spin 1.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.checklist li.wip .st{animation:none}}
+.checklist b{font-weight:600;display:block}
+.checklist .sub{font-size:14px;color:var(--muted)}
+.tag{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.tag.ok{background:var(--good-soft);color:var(--good)}
+.tag.wip{background:#E7F0FF;color:var(--blue)}
+.tag.next{background:var(--blue);color:#FFFFFF}
+
+/* PM notes rail */
+aside.notes{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:18px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);min-width:0}
+@media (max-width:960px){aside.notes{position:static}}
+.notes h2{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0;font-weight:700}
+.notes .stepname{font-family:var(--display);font-size:24px;font-weight:400;letter-spacing:-.02em;margin:0;line-height:1.15}
+.notes dl{margin:0;display:flex;flex-direction:column;gap:14px}
+.notes dt{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.notes dd{margin:3px 0 0;font-size:14px;line-height:1.5}
+.notes .seen{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:16px}
+.notes .seen p{margin:0;font-size:14px;line-height:1.5}
+.notes .seen p b{color:var(--blue);font-weight:600}
+.notes details{font-size:13px;color:var(--muted)}
+.notes details summary{cursor:pointer;font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.notes details ul{margin:8px 0 0;padding-left:16px;display:flex;flex-direction:column;gap:4px}
+.notes a{color:var(--ink);overflow-wrap:anywhere}
+.notes .disclaim{font-size:12px;color:var(--muted);margin:0}
+</style>
+
+</head>
+<body>
+<header class="nav"><div class="nav-in">
+  <div class="brand">Open for Business <small>Concept prototype</small></div>
+  <label class="switch" for="notesToggle"><input type="checkbox" id="notesToggle" checked> PM notes</label>
+</div></header>
+
+<div class="page"><div class="wrap">
+  <ol class="stepper" id="stepper" aria-label="Progress"></ol>
+  <div class="grid" id="grid">
+    <main class="card" id="stage" aria-live="polite"></main>
+    <aside class="notes" id="notes" aria-label="Product manager notes"></aside>
+  </div>
+</div></div>
+
+<script>
+const STEPS=["Your business","Your stage","Your logo","Your plan","Launch"];
+const INDUSTRIES=[
+  {id:"food",label:"Food & drink",c:["#B4472A","#F2C46D"],pages:["Home","Menu","About","Contact"]},
+  {id:"beauty",label:"Beauty & wellness",c:["#8A3B6E","#F0B8C8"],pages:["Home","Services","Book","Contact"]},
+  {id:"consulting",label:"Consulting",c:["#1F3A5F","#7FB0D8"],pages:["Home","Services","About","Contact"]},
+  {id:"retail",label:"Online shop",c:["#2F4BE0","#F2A93B"],pages:["Home","Shop","FAQ","Contact"]},
+  {id:"fitness",label:"Fitness",c:["#1F7A4D","#B5E36B"],pages:["Home","Classes","Pricing","Contact"]},
+  {id:"trades",label:"Home services",c:["#3A3A3A","#F2A93B"],pages:["Home","Services","Get a quote","Contact"]}
+];
+const TIERS=[
+  {id:"brand",name:"Brand",for:"For looking professional",m:9.99,y:5.99,f:["<b>High-res</b> logo files","<b>Brand kit</b>: colors and fonts","<b>Social media</b> templates"]},
+  {id:"launch",name:"Launch",for:"For starting officially",m:19.99,y:12.99,f:["Everything in Brand","<b>Website</b> with suggested pages","<b>LLC formation</b> filing"]},
+  {id:"grow",name:"Grow",for:"For selling online",m:39.99,y:24.99,f:["Everything in Launch","<b>Online store</b> and payments","<b>Invoicing</b> and business email"]}
+];
+const STAGES=[
+  {id:"idea",t:"Just an idea",s:"No customers yet. I want to look legit from day one."},
+  {id:"selling",t:"Already selling, informally",s:"Friends, Instagram, markets. No company set up yet."},
+  {id:"registered",t:"Registered and growing",s:"I have an LLC. I need to look and sell like a real brand."}
+];
+const LOGOS=[{type:"initials",label:"Initials · badge"},{type:"icon",label:"Icon + name"},{type:"initials",label:"Initials · monogram"},{type:"name",label:"Name only"}];
+const REC={
+  idea:{tier:"launch",why:"You're starting from zero. A logo, a site and an LLC in one go puts you on the path to a business bank account."},
+  selling:{tier:"grow",why:"You already have customers. Taking payments online and forming an LLC protects your personal assets once money is moving."},
+  registered:{tier:"grow",why:"You're already registered, so we've taken LLC filing off. The value for you is a store and invoicing."}
+};
+// "seen" = patterns reported in public reviews and help pages (sources listed in the notes panel).
+const NOTES=[
+  {goal:"Get a commitment in seconds: a name, an optional tagline, one tap.",metric:"Step 1 completion rate.",hyp:"Seeing their own business name on every later screen creates ownership and lifts completion further down the funnel.",test:"Name first vs. industry first. Judge on step 3 completion, not step 1.",
+   seen:[["Tailor Brands","opens with business name and tagline, then asks for industry."],["Wix","opens with what kind of site you're building, and asks if it's for you or a client."]]},
+  {goal:"Segment by intent so later screens can personalize the offer.",metric:"Mix of stages, then plan conversion by stage.",hyp:"\"Already selling\" users will pay more but are poorly served by a one-size offer.",test:"Personalized recommendation vs. one default plan, split by stage.",
+   seen:[["Wix","uses onboarding answers to pre-configure pages and features. The questions can be skipped."],["Wix","AI builder tailors its follow-up questions to the business described."]]},
+  {goal:"Deliver the aha moment, seeing the business look real, before asking for anything.",metric:"Logo selected rate and time to first selection.",hyp:"Seeing the logo on a card and a profile picture matters more than seeing more options.",test:"4 options with mockups vs. 8 options without. Measure selection and plan conversion.",
+   seen:[["Tailor Brands","asks for a logo type (icon, name or initials) and styles you like."],["Tailor Brands","design is free; usable-resolution download needs a paid plan. Sign-up comes after the design."]]},
+  {goal:"Get people to commit for longer without hurting trust.",metric:"Share of 2- and 3-year purchases. Refunds in the first 14 days as a guardrail.",hyp:"Adding 2- and 3-year options, each showing the saving, increases multi-year purchases without increasing refunds.",test:"Billing toggle with 2 options (monthly, yearly) vs. 4 options (adding 2 and 3 years).",
+   seen:[["Wix","flow is choose a plan, then a billing cycle, then checkout."],["Wix","offers monthly, yearly, 2-year and 3-year billing, shows the saving for each, and pre-selects yearly."],["Wix","yearly plans include a free domain for the first year. New plans get a 14-day money-back guarantee."],["Reviews","of LLC services flag pre-checked add-on trials as a trust problem. Here nothing is pre-checked."]]},
+  {goal:"Turn one purchase into an ongoing relationship.",metric:"Checklist items done in week 1 and attach rate for banking.",hyp:"A visible launch checklist gives a reason to come back and a natural place for the next product.",test:"Checklist with a next best action vs. a generic dashboard. Measure 7-day return rate.",
+   seen:[["Tailor Brands","(2026) lets new LLC customers open a business bank account in the same flow, without re-entering company details."],["Wix","suggests pages like About, FAQ and Contact based on site type."]]}
+];
+const SOURCES=[
+  ["thesmbguide.com: Tailor Brands review","https://www.thesmbguide.com/tailor-brands"],
+  ["wbcomdesigns.com: Tailor Brands logo maker","https://wbcomdesigns.com/tailor-brands-logo-maker/"],
+  ["Creative Bloq: Tailor Brands review","https://www.creativebloq.com/reviews/tailor-brands"],
+  ["logo.com: Logo.com vs Tailor Brands","https://logo.com/guides/logo-vs-tailor-brands"],
+  ["IT Brief: Tailor Brands adds integrated banking","https://itbrief.news/story/tailor-brands-adds-integrated-banking-for-new-us-llcs"],
+  ["StartupOwl: Tailor Brands review","https://startupowl.com/reviews/tailor-brands"],
+  ["websitesetup.org: How to use Wix","https://websitesetup.org/how-to-use-wix-editor/"],
+  ["Website Builder Expert: How to use Wix","https://www.websitebuilderexpert.com/building-websites/how-to-use-wix/"],
+  ["Website Planet: Upgrading to Premium on Wix","https://www.websiteplanet.com/guides/wix-elements/how-to-upgrade-to-premium-on-wix/"],
+  ["Wix: Plans","https://www.wix.com/plans"],
+  ["Wix Help: Refund policy","https://support.wix.com/en/article/refund-policy"]
+];
+
+
+const S={step:0,name:"Juniper & Rye",tagline:"",industry:"food",stage:null,logoType:"all",logo:null,tier:null,cycle:12,addons:{domain:false,email:false,agent:false}};
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ind=()=>INDUSTRIES.find(i=>i.id===S.industry)||INDUSTRIES[0];
+const initials=()=>{const w=S.name.replace(/[^A-Za-z0-9 ]/g," ").trim().split(/\s+/).filter(Boolean);return ((w[0]||"Y")[0]+(w[1]?w[1][0]:"")).toUpperCase()};
+const money=n=>"$"+n.toFixed(2);
+const CHECK=`<svg class="ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.5 9.5l3.5 3.5 7.5-8" fill="none" stroke="#0B0B0F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const GIFT=`<svg class="gift" viewBox="0 0 18 18" aria-label="gift"><rect x="2.5" y="6.5" width="13" height="3" rx=".5" fill="none" stroke="#0B0B0F" stroke-width="1.3"/><rect x="3.5" y="9.5" width="11" height="6" fill="none" stroke="#0B0B0F" stroke-width="1.3"/><path d="M9 6.5v9M9 6.5C7.5 3.5 4.8 4 5.6 5.6 6 6.4 9 6.5 9 6.5zm0 0c1.5-3 4.2-2.5 3.4-.9C12 6.4 9 6.5 9 6.5z" fill="none" stroke="#0B0B0F" stroke-width="1.3"/></svg>`;
+const MB=`<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M4 11a7 7 0 1 0 2.1-5" fill="none" stroke="#0B0B0F" stroke-width="1.5" stroke-linecap="round"/><path d="M3.5 3.5v3.2h3.2" fill="none" stroke="#0B0B0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><text x="11" y="15" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0B0B0F">$</text></svg>`;
+
+function logoSVG(style){
+  const [a,b]=ind().c, n=esc(S.name||"Your business"), i=esc(initials()), tg=esc(S.tagline);
+  const fs=Math.max(14,Math.min(28,300/Math.max(6,(S.name||"").length)));
+  const tag=(y,size)=>tg?`<text x="100" y="${y}" text-anchor="middle" font-family="Inter, sans-serif" font-size="${size}" fill="#585C6E">${tg}</text>`:"";
+  if(style===0) return `<svg viewBox="0 0 200 150" role="img" aria-label="Badge logo"><circle cx="100" cy="58" r="42" fill="${a}"/><circle cx="100" cy="58" r="35" fill="none" stroke="${b}" stroke-width="2"/><text x="100" y="70" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="32" fill="#FFFFFF">${i}</text><text x="100" y="124" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="${fs*.75}" fill="#0B0B0F">${n}</text>${tag(140,9)}</svg>`;
+  if(style===1) return `<svg viewBox="0 0 200 150" role="img" aria-label="Icon and name logo"><g transform="translate(100 44)"><ellipse rx="9" ry="22" fill="${a}" transform="rotate(-30) translate(0 -6)"/><ellipse rx="9" ry="22" fill="${b}" transform="rotate(30) translate(0 -6)"/></g><text x="100" y="104" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-weight="800" font-size="${fs}" fill="#0B0B0F" letter-spacing="-0.5">${n}</text>${tag(124,10)}</svg>`;
+  if(style===2) return `<svg viewBox="0 0 200 150" role="img" aria-label="Monogram logo"><rect x="22" y="43" width="56" height="56" rx="10" fill="#0B0B0F"/><text x="50" y="81" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-weight="800" font-size="26" fill="${b}">${i}</text><text x="88" y="76" font-family="Inter, sans-serif" font-weight="600" font-size="${Math.min(16,fs*.62)}" fill="#0B0B0F">${n}</text>${tg?`<text x="88" y="92" font-family="Inter, sans-serif" font-size="9" fill="#585C6E">${tg}</text>`:""}</svg>`;
+  return `<svg viewBox="0 0 200 150" role="img" aria-label="Name-only logo"><text x="100" y="78" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="${fs*1.05}" fill="${a}">${n}</text><line x1="70" y1="92" x2="130" y2="92" stroke="${b}" stroke-width="3" stroke-linecap="round"/>${tag(112,10)}</svg>`;
+}
+
+const CYCLES=[{n:1,label:"Monthly",every:"every month"},{n:12,label:"Yearly",every:"every year"},{n:24,label:"2 years",every:"every 2 years"},{n:36,label:"3 years",every:"every 3 years"}];
+const cyc=()=>CYCLES.find(c=>c.n===S.cycle);
+function cyclePrice(t,n){return n===1?t.m:n===12?t.y:n===24?t.y*0.9:t.y*0.8}
+function price(t){return cyclePrice(t,S.cycle)}
+// Biggest saving vs. paying monthly across plans, rounded down so it never overstates.
+function saveUpTo(n){return Math.max(...TIERS.map(t=>Math.floor((1-cyclePrice(t,n)/t.m)*100)))}
+function hasLLC(){return (S.tier==="launch"||S.tier==="grow") && S.stage!=="registered"}
+function hasSite(){return S.tier==="launch"||S.tier==="grow"}
+function freeDomain(){return S.cycle>=12&&hasSite()}
+const domainName=()=>(S.name.toLowerCase().replace(/[^a-z0-9]/g,"")||"yourbusiness")+".com";
+function total(){
+  const t=TIERS.find(x=>x.id===S.tier); if(!t) return 0;
+  let v=price(t); if(S.addons.domain&&!freeDomain()) v+=1.50; if(S.addons.email) v+=3; if(S.addons.agent&&hasLLC()) v+=9.99; return v;
+}
+function priceHTML(v){const [i,c]=v.toFixed(2).split(".");return `<div class="price"><span class="cur">$</span><span class="int">${i}</span><span class="cents">.${c}</span><span class="per">/mo</span></div>`}
+
+function renderStepper(){
+  $("#stepper").innerHTML=STEPS.map((s,i)=>`<li class="${i<S.step?"done":i===S.step?"now":""}" ${i===S.step?'aria-current="step"':""}><span class="bar"></span>${s}</li>`).join("");
+}
+function renderNotes(){
+  const n=NOTES[S.step];
+  $("#notes").innerHTML=`<h2>PM notes · step ${S.step+1} of ${STEPS.length}</h2>
+  <p class="stepname">${STEPS[S.step]}</p>
+  <dl><div><dt>Goal</dt><dd>${n.goal}</dd></div><div><dt>Metric to watch</dt><dd>${n.metric}</dd></div><div><dt>Hypothesis</dt><dd>${n.hyp}</dd></div><div><dt>Experiment</dt><dd>${n.test}</dd></div></dl>
+  <div class="seen"><dt>Seen in the market</dt>${n.seen.map(([w,t])=>`<p><b>${w}</b> ${t}</p>`).join("")}</div>
+  <details><summary>Sources</summary><ul>${SOURCES.map(([t,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${t}</a></li>`).join("")}</ul></details>
+  <p class="disclaim">Independent concept, not affiliated with any company named here. Metrics and experiments are proposals, not results. Prices are examples.</p>`;
+}
+function actions(nextLabel,canNext,skip){
+  return `<div class="actions">${S.step>0?`<button class="btn ghost" id="back">Back</button>`:"<span></span>"}<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${skip?`<button class="btn link" id="skip">Skip</button>`:""}<button class="btn primary" id="next" ${canNext?"":"disabled"}>${nextLabel}</button></div></div>`;
+}
+
+function render(){
+  renderStepper(); renderNotes();
+  const st=$("#stage"); st.classList.toggle("pricing",S.step===3);
+  let h="";
+  if(S.step===0){
+    h=`<div style="display:flex;flex-direction:column;gap:12px"><h1>What are you starting?</h1><p class="lede">A few quick answers and you'll see your brand come to life. No account needed yet.</p></div>
+    <label class="field" for="bizName">Business name<input type="text" id="bizName" maxlength="28" value="${esc(S.name)}" placeholder="e.g. Juniper & Rye" autocomplete="organization"></label>
+    <label class="field" for="bizTag">Tagline <span class="opt-l">(optional)</span><input type="text" id="bizTag" maxlength="32" value="${esc(S.tagline)}" placeholder="e.g. Small-batch bakery"></label>
+    <div class="field">What kind of business?<div class="chips">${INDUSTRIES.map(i=>`<button class="chip" data-ind="${i.id}" aria-pressed="${S.industry===i.id}">${i.label}</button>`).join("")}</div></div>
+    ${actions("Continue",S.name.trim()&&S.industry)}`;
+  }
+  if(S.step===1){
+    h=`<div style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">${esc(S.name)}</span><h1>Where are you today?</h1><p class="lede">This shapes what we recommend. You won't pay for things you don't need.</p></div>
+    <div class="opts" role="radiogroup" aria-label="Business stage">${STAGES.map(s=>`<button class="opt" role="radio" data-stage="${s.id}" aria-checked="${S.stage===s.id}"><span class="radio"></span><b>${s.t}</b><span class="sub">${s.s}</span></button>`).join("")}</div>
+    ${actions("Show me my logo",!!S.stage,true)}`;
+  }
+  if(S.step===2){
+    const shown=LOGOS.map((l,k)=>({...l,k})).filter(l=>S.logoType==="all"||l.type===S.logoType);
+    h=`<div style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">Designed for ${esc(ind().label.toLowerCase())}</span><h1>Pick a starting point for ${esc(S.name)}</h1></div>
+    <div class="typefilter" aria-label="Logo type">${[["all","All"],["icon","Icon"],["name","Name"],["initials","Initials"]].map(([v,l])=>`<button class="chip" data-ltype="${v}" aria-pressed="${S.logoType===v}">${l}</button>`).join("")}</div>
+    <div class="logos" role="radiogroup" aria-label="Logo options">${shown.map(l=>`<div class="logo-wrap"><button class="logo" role="radio" data-logo="${l.k}" aria-checked="${S.logo===l.k}">${logoSVG(l.k)}</button><span class="logo-type">${l.label}</span></div>`).join("")}</div>
+    ${S.logo!==null?`<div style="display:flex;flex-direction:column;gap:10px"><span class="mock-label">How it looks in the real world</span><div class="mockups">
+      <div class="mock-card"><div class="m">${logoSVG(S.logo)}</div><div><b style="font-size:13px">${esc(S.name)}</b><small>hello@${esc(domainName())}</small></div></div>
+      <div class="mock-avatar">${logoSVG(S.logo)}</div></div></div>`:`<p class="mock-label" style="margin:0">Tap a logo to see it on a business card and a social profile.</p>`}
+    ${actions("Use this logo",S.logo!==null)}`;
+  }
+  if(S.step===3){
+    const rec=S.stage?REC[S.stage]:null; if(!S.tier) S.tier=rec?rec.tier:"launch";
+    h=`<div class="mb-banner">${MB}14-day money-back guarantee on all plans</div>
+    <div class="p-head"><h1>Choose the plan that's right for ${esc(S.name)}</h1>
+      <div class="includes"><span>All plans include:</span><span>${CHECK}High-res logo files</span><span>${CHECK}Brand kit</span><span>${CHECK}Cancel anytime</span></div>
+      <div class="billing"><div class="seg" role="group" aria-label="Billing cycle">${CYCLES.map(c=>`<button data-cycle="${c.n}" aria-pressed="${S.cycle===c.n}">${c.label}${c.n>1?`<span class="off">Save up to ${saveUpTo(c.n)}%</span>`:""}</button>`).join("")}</div></div>
+    </div>
+    <div class="tiers" role="radiogroup" aria-label="Plans">${TIERS.map(t=>{
+      const isRec=rec&&t.id===rec.tier, isSel=S.tier===t.id;
+      const feats=[...t.f.map(f=>`<li class="${f.includes("LLC")&&S.stage==="registered"?"skip":""}">${CHECK}<span>${f}</span></li>`), ...(S.cycle>=12&&t.id!=="brand"?[`<li>${CHECK}<span>Free domain for <span style="white-space:nowrap">1 year${GIFT}</span></span></li>`]:[])].join("");
+      return `<div class="tier ${isRec?"is-rec":""} ${isSel?"is-sel":""}">
+        <div class="rec ${isRec?"":"empty"}">${isRec?"RECOMMENDED":""}</div>
+        <h3>${t.name}</h3><p class="for">${t.for}</p>
+        ${priceHTML(price(t))}${S.cycle>1?`<span class="savebadge">SAVE $${Math.round((t.m-price(t))*S.cycle).toLocaleString("en-US")}</span>`:""}
+        <button class="select" role="radio" aria-checked="${isSel}" data-tier="${t.id}">${isSel?"Selected":"Select"}</button>
+        ${isRec?`<div class="recbox"><b><span aria-hidden="true">✦</span>${t.name} is recommended for ${esc(S.name)}</b>${rec.why}</div>`:""}
+        <ul class="feats">${feats}</ul></div>`}).join("")}</div>
+    <div class="addons"><h3>Add to your plan</h3><p class="hint">Optional. Nothing is pre-selected.</p>
+      ${freeDomain()?"":`<label class="addon" for="adDomain"><input type="checkbox" id="adDomain" ${S.addons.domain?"checked":""}><span>Custom domain: <b>${esc(domainName())}</b></span><span class="p">+$1.50/mo</span></label>`}
+      <label class="addon" for="adEmail"><input type="checkbox" id="adEmail" ${S.addons.email?"checked":""}><span>Professional email for 1 user</span><span class="p">+$3.00/mo</span></label>
+      ${hasLLC()?`<label class="addon" for="adAgent"><input type="checkbox" id="adAgent" ${S.addons.agent?"checked":""}><span>Registered agent service</span><span class="p">+$9.99/mo</span></label>`:""}
+    </div>
+    <div class="checkout"><div><div class="mock-label">Your total</div><div class="amt">${money(total())} <small>/mo, billed ${cyc().every}</small></div></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" id="back">Back</button><button class="btn primary" id="next">Continue to checkout</button></div></div>
+    <p class="fine">Changed your mind? Cancel within 14 days and get all your money back.<br>This is a prototype, so the prices shown are examples, not real prices.</p>`;
+  }
+  if(S.step===4){
+    const t=TIERS.find(x=>x.id===S.tier);
+    const items=[
+      {c:"ok",t:"Logo and brand kit",s:"High-res files unlocked",tag:"Done"},
+      ...(hasLLC()?[{c:"wip",t:"LLC formation",s:"Filed with the state. Waiting for approval.",tag:"In progress"},{c:"",t:"Get your EIN (tax ID)",s:"Requested once your LLC is approved",tag:""}]:[]),
+      ...(hasSite()?[{c:"",t:"Publish your website",s:"Suggested pages for you: "+ind().pages.join(", "),tag:"Next step",next:true}]:[]),
+      {c:"",t:"Open a business bank account",s:hasLLC()?"Right here once your EIN arrives. Your company details carry over.":"Keep business and personal money separate",tag:""}
+    ];
+    const done=items.filter(i=>i.c==="ok").length;
+    h=`<div style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">Welcome to ${t.name}</span><h1>${esc(S.name)} is on its way</h1></div>
+    <div class="progress"><span>${done} of ${items.length} done</span><div class="track"><div class="fill" style="width:${done/items.length*100}%"></div></div></div>
+    <ul class="checklist">${items.map(i=>`<li class="${i.c}"><span class="st"></span><div><b>${i.t}</b><span class="sub">${esc(i.s)}</span></div>${i.tag?`<span class="tag ${i.next?"next":i.c}">${i.tag}</span>`:"<span></span>"}</li>`).join("")}</ul>
+    <div class="actions"><button class="btn ghost" id="restart">Start over</button><button class="btn primary" id="cta">${hasSite()?"Publish my website":"Download logo files"}</button></div>`;
+  }
+  st.innerHTML=h; bind();
+}
+
+function go(d){S.step=Math.max(0,Math.min(4,S.step+d));render();window.scrollTo({top:0,behavior:"smooth"})}
+function bind(){
+  const q=(s,f)=>document.querySelectorAll(s).forEach(e=>e.addEventListener("click",()=>f(e)));
+  const n=$("#next"),b=$("#back"),sk=$("#skip");
+  if(n) n.onclick=()=>go(1);
+  if(b) b.onclick=()=>go(-1);
+  if(sk) sk.onclick=()=>{S.stage=null;S.tier=null;go(1)};
+  const nm=$("#bizName"),tg=$("#bizTag");
+  if(nm) nm.addEventListener("input",()=>{S.name=nm.value;$("#next").disabled=!(S.name.trim()&&S.industry)});
+  if(tg) tg.addEventListener("input",()=>{S.tagline=tg.value});
+  q("[data-ind]",e=>{S.industry=e.dataset.ind;render()});
+  q("[data-stage]",e=>{S.stage=e.dataset.stage;S.tier=null;render()});
+  q("[data-ltype]",e=>{S.logoType=e.dataset.ltype;render()});
+  q("[data-logo]",e=>{S.logo=+e.dataset.logo;render()});
+  q("[data-tier]",e=>{S.tier=e.dataset.tier;render()});
+  q("[data-cycle]",e=>{S.cycle=+e.dataset.cycle;render()});
+  const ad=$("#adDomain"),ae=$("#adEmail"),aa=$("#adAgent");
+  if(ad&&!ad.disabled) ad.onchange=()=>{S.addons.domain=ad.checked;render()};
+  if(ae) ae.onchange=()=>{S.addons.email=ae.checked;render()};
+  if(aa) aa.onchange=()=>{S.addons.agent=aa.checked;render()};
+  const r=$("#restart"); if(r) r.onclick=()=>{Object.assign(S,{step:0,stage:null,logo:null,logoType:"all",tier:null,addons:{domain:false,email:false,agent:false}});render()};
+  const c=$("#cta"); if(c) c.onclick=()=>{c.textContent="Done in the real product";c.disabled=true};
+}
+$("#notesToggle").addEventListener("change",e=>{$("#notes").hidden=!e.target.checked;$("#grid").classList.toggle("no-notes",!e.target.checked)});
+render();
+</script>
+</body>
+</html>
