@@ -157,6 +157,8 @@ input[type=text]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 1p
 .checkout .amt small{font-family:var(--body);font-size:14px;color:var(--muted);letter-spacing:0}
 .fine{font-size:13px;color:var(--muted);margin:0;text-align:center}
 
+.walk{gap:14px}.walk ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:16px}.walk-note{margin:0;color:var(--muted)}
+
 /* Launch step */
 .progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
 .progress .track{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
@@ -202,10 +204,33 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
 </div></header>
 
 <div class="page"><div class="wrap">
-  <ol class="stepper" id="stepper" aria-label="Progress"></ol>
+  <ol class="stepper" id="stepper" aria-label="Progress"><li class="now" aria-current="step"><span class="bar"></span>Your business</li><li class=""><span class="bar"></span>Your stage</li><li class=""><span class="bar"></span>Your logo</li><li class=""><span class="bar"></span>Your plan</li><li class=""><span class="bar"></span>Launch</li></ol>
+  <noscript>
+    <section class="card walk">
+      <p class="walk-note">This prototype is interactive and needs JavaScript to click through. Here is what each step does.</p>
+      <ol>
+        <li><b>Your business.</b> Enter a business name, an optional tagline and the type of business.</li>
+        <li><b>Your stage.</b> Choose: just an idea, already selling, or already registered. The answer decides which plan is recommended.</li>
+        <li><b>Your logo.</b> Four logos generated from the business name, filtered by icon, name or initials, and shown on a business card and a profile picture.</li>
+        <li><b>Your plan.</b> Three plans (Brand, Launch, Grow) with one recommended and a one-line reason. A billing toggle for monthly, yearly, 2 years and 3 years shows the saving for each. Add-ons are optional and nothing is pre-selected.</li>
+        <li><b>Launch.</b> A checklist of next steps: LLC filing, tax ID (EIN), publishing the website and opening a business bank account.</li>
+      </ol>
+      <p class="walk-note">PM notes for each step cover the goal, the metric to watch, a hypothesis, a proposed experiment and patterns seen in the market. The main experiment: a billing toggle with 2 options (monthly, yearly) vs. 4 options (adding 2 and 3 years).</p>
+    </section>
+  </noscript>
+  
   <div class="grid" id="grid">
-    <main class="card" id="stage" aria-live="polite"></main>
-    <aside class="notes" id="notes" aria-label="Product manager notes"></aside>
+    <main class="card" id="stage" aria-live="polite"><div style="display:flex;flex-direction:column;gap:12px"><h1>What are you starting?</h1><p class="lede">A few quick answers and you'll see your brand come to life. No account needed yet.</p></div>
+    <label class="field" for="bizName">Business name<input type="text" id="bizName" maxlength="28" value="Juniper &amp; Rye" placeholder="e.g. Juniper &amp; Rye" autocomplete="organization"></label>
+    <label class="field" for="bizTag">Tagline <span class="opt-l">(optional)</span><input type="text" id="bizTag" maxlength="32" value="" placeholder="e.g. Small-batch bakery"></label>
+    <div class="field">What kind of business?<div class="chips"><button class="chip" data-ind="food" aria-pressed="true">Food &amp; drink</button><button class="chip" data-ind="beauty" aria-pressed="false">Beauty &amp; wellness</button><button class="chip" data-ind="consulting" aria-pressed="false">Consulting</button><button class="chip" data-ind="retail" aria-pressed="false">Online shop</button><button class="chip" data-ind="fitness" aria-pressed="false">Fitness</button><button class="chip" data-ind="trades" aria-pressed="false">Home services</button></div></div>
+    <div class="actions"><span></span><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="btn primary" id="next">Continue</button></div></div></main>
+    <aside class="notes" id="notes" aria-label="Product manager notes"><h2>PM notes · step 1 of 5</h2>
+  <p class="stepname">Your business</p>
+  <dl><div><dt>Goal</dt><dd>Get a commitment in seconds: a name, an optional tagline, one tap.</dd></div><div><dt>Metric to watch</dt><dd>Step 1 completion rate.</dd></div><div><dt>Hypothesis</dt><dd>Seeing their own business name on every later screen creates ownership and lifts completion further down the funnel.</dd></div><div><dt>Experiment</dt><dd>Name first vs. industry first. Judge on step 3 completion, not step 1.</dd></div></dl>
+  <div class="seen"><dt>Seen in the market</dt><p><b>Tailor Brands</b> opens with business name and tagline, then asks for industry.</p><p><b>Wix</b> opens with what kind of site you're building, and asks if it's for you or a client.</p></div>
+  <details><summary>Sources</summary><ul><li><a href="https://www.thesmbguide.com/tailor-brands" target="_blank" rel="noopener">thesmbguide.com: Tailor Brands review</a></li><li><a href="https://wbcomdesigns.com/tailor-brands-logo-maker/" target="_blank" rel="noopener">wbcomdesigns.com: Tailor Brands logo maker</a></li><li><a href="https://www.creativebloq.com/reviews/tailor-brands" target="_blank" rel="noopener">Creative Bloq: Tailor Brands review</a></li><li><a href="https://logo.com/guides/logo-vs-tailor-brands" target="_blank" rel="noopener">logo.com: Logo.com vs Tailor Brands</a></li><li><a href="https://itbrief.news/story/tailor-brands-adds-integrated-banking-for-new-us-llcs" target="_blank" rel="noopener">IT Brief: Tailor Brands adds integrated banking</a></li><li><a href="https://startupowl.com/reviews/tailor-brands" target="_blank" rel="noopener">StartupOwl: Tailor Brands review</a></li><li><a href="https://websitesetup.org/how-to-use-wix-editor/" target="_blank" rel="noopener">websitesetup.org: How to use Wix</a></li><li><a href="https://www.websitebuilderexpert.com/building-websites/how-to-use-wix/" target="_blank" rel="noopener">Website Builder Expert: How to use Wix</a></li><li><a href="https://www.websiteplanet.com/guides/wix-elements/how-to-upgrade-to-premium-on-wix/" target="_blank" rel="noopener">Website Planet: Upgrading to Premium on Wix</a></li><li><a href="https://www.wix.com/plans" target="_blank" rel="noopener">Wix: Plans</a></li><li><a href="https://support.wix.com/en/article/refund-policy" target="_blank" rel="noopener">Wix Help: Refund policy</a></li></ul></details>
+  <p class="disclaim">Independent concept, not affiliated with any company named here. Metrics and experiments are proposals, not results. Prices are examples.</p></aside>
   </div>
 </div></div>
 
