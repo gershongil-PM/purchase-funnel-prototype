@@ -341,7 +341,7 @@ const SOURCES=[
 ];
 
 
-const S={step:0,name:"Juniper & Rye",tagline:"",industry:"food",stage:null,logoType:"all",logo:null,logoSeed:0,upload:null,uploadErr:"",tier:null,cycle:12,variant:"B",briefOpen:true,addons:{domain:false,email:false,agent:false}};
+const S={step:0,name:"Juniper & Rye",tagline:"",industry:"food",stage:null,logoType:"all",logo:null,logoSeed:0,upload:null,uploadErr:"",tier:null,cycle:12,variant:"B",briefOverride:{},addons:{domain:false,email:false,agent:false}};
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const ind=()=>INDUSTRIES.find(i=>i.id===S.industry)||INDUSTRIES[0];
@@ -392,12 +392,14 @@ function renderStepper(){
   if(ol.children.length===STEPS.length){[...ol.children].forEach((li,i)=>{li.className=i<S.step?"done":i===S.step?"now":"";if(i===S.step)li.setAttribute("aria-current","step");else li.removeAttribute("aria-current")});return}
   ol.innerHTML=STEPS.map((s,i)=>`<li class="${i<S.step?"done":i===S.step?"now":""}" ${i===S.step?'aria-current="step"':""}><span class="bar"></span>${s}</li>`).join("");
 }
+// The brief opens on the first screen (introduction) and the plan screen (where A and B differ); elsewhere it starts collapsed.
+function briefOpen(){return S.step in S.briefOverride?S.briefOverride[S.step]:(S.step===0||S.step===3)}
 function renderNotes(){
   const n=NOTES[S.step];
   const row=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
   $("#notes").innerHTML=`<h2>PM notes</h2>
   <div class="variant"><span>Preview variant</span><div class="seg" role="group" aria-label="Experiment variant"><button data-variant="A" aria-pressed="${S.variant==="A"}">A · Control</button><button data-variant="B" aria-pressed="${S.variant==="B"}">B · Personalized</button></div><small>Changes the plan screen only.</small></div>
-  <details class="brief" id="brief" ${S.briefOpen?"open":""}><summary>Experiment brief</summary>
+  <details class="brief" id="brief" ${briefOpen()?"open":""}><summary>Experiment brief</summary>
   <dl>
     ${row("Objective","Improve purchase conversion with a personalized onboarding-to-purchase experience.")}
     ${row("Problem","People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.")}
@@ -541,7 +543,7 @@ function bind(){
   q("[data-ind]",e=>{S.industry=e.dataset.ind;render()});
   q("[data-stage]",e=>{S.stage=e.dataset.stage;S.tier=null;render()});
   q("[data-variant]",e=>{S.variant=e.dataset.variant;S.tier=null;render()});
-  const br=$("#brief"); if(br) br.addEventListener("toggle",()=>{S.briefOpen=br.open});
+  const br=$("#brief"); if(br) br.addEventListener("toggle",()=>{S.briefOverride[S.step]=br.open});
   q("[data-ltype]",e=>{S.logoType=e.dataset.ltype;render()});
   q("[data-logo]",e=>{S.logo=e.dataset.logo==="upload"?"upload":+e.dataset.logo;render()});
   const rg=$("#regen"); if(rg) rg.onclick=()=>{
