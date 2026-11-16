@@ -187,6 +187,12 @@ input[type=text]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 1p
 .notes .eyebrow-s{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);font-weight:700}
 .notes .rules{margin:4px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
 
+/* Variant B personalization */
+.answers{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;font-size:15px}
+.answers .ans{background:var(--surface);border:1px solid #CFCAF5;border-radius:999px;padding:4px 12px;font-weight:500}
+.answers .btn.link{font-size:14px;padding:4px 6px}
+.foryou{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--purple);background:var(--lav);border-radius:4px;padding:1px 6px;vertical-align:1px;white-space:nowrap}
+
 /* Launch step */
 .progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
 .progress .track{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
@@ -261,7 +267,7 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
     <div><dt>Problem</dt><dd>People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.</dd></div>
     <div><dt>Hypothesis</dt><dd>Recommending a plan based on the user's business stage will increase purchase conversion compared with the same default recommendation for everyone.</dd></div>
     <div><dt>Control (A)</dt><dd>Everyone sees the same plan marked Recommended, with no reason.</dd></div>
-    <div><dt>Treatment (B)</dt><dd>The recommended plan and its one-line reason adapt to the stage answer.</dd></div>
+    <div><dt>Treatment (B)</dt><dd>The recommendation adapts to the answers: the plan, a reason that quotes what the user said, highlighted features, and a reminder of the answers with a way to change them.</dd></div>
     <div><dt>Primary metric</dt><dd>Purchase conversion: users who reach the plan screen and complete a purchase.</dd></div>
     <div><dt>Guardrails</dt><dd>Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.</dd></div>
     <div><dt>Decision rule</dt><dd>Ship B if conversion is significantly higher and no guardrail gets worse beyond an agreed limit. Otherwise keep A.</dd></div>
@@ -269,7 +275,7 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
     <div><dt>Status</dt><dd>Not run. This shows how I would validate the hypothesis, not a result.</dd></div>
   </dl></details>
   <div class="screen"><span class="eyebrow-s">This screen · 1 of 5</span><p class="stepname">Your business</p>
-  <dl><div><dt>Role in the hypothesis</dt><dd>Understand the business context.</dd></div><div><dt>How it works</dt><dd><ul class="rules"><li>The name and tagline appear on every later screen and in the logos.</li><li>Business type sets the logo colors and the website pages suggested at launch.</li><li>Identical in A and B.</li></ul></dd></div></dl></div>
+  <dl><div><dt>Role in the hypothesis</dt><dd>Understand the business context.</dd></div><div><dt>How it works</dt><dd><ul class="rules"><li>The name and tagline appear on every later screen and in the logos.</li><li>Business type sets the logo colors and the website pages suggested at launch.</li><li>The screen is identical in A and B. In B, the business type also personalizes the website line on the plan screen.</li></ul></dd></div></dl></div>
   <div class="seen"><dt>Seen in the market</dt><p><b>Tailor Brands</b> opens with business name and tagline, then asks for industry.</p><p><b>Wix</b> opens with what kind of site you're building, and asks if it's for you or a client.</p></div>
   <details><summary>Sources</summary><ul><li><a href="https://www.thesmbguide.com/tailor-brands" target="_blank" rel="noopener">thesmbguide.com: Tailor Brands review</a></li><li><a href="https://wbcomdesigns.com/tailor-brands-logo-maker/" target="_blank" rel="noopener">wbcomdesigns.com: Tailor Brands logo maker</a></li><li><a href="https://www.creativebloq.com/reviews/tailor-brands" target="_blank" rel="noopener">Creative Bloq: Tailor Brands review</a></li><li><a href="https://logo.com/guides/logo-vs-tailor-brands" target="_blank" rel="noopener">logo.com: Logo.com vs Tailor Brands</a></li><li><a href="https://itbrief.news/story/tailor-brands-adds-integrated-banking-for-new-us-llcs" target="_blank" rel="noopener">IT Brief: Tailor Brands adds integrated banking</a></li><li><a href="https://startupowl.com/reviews/tailor-brands" target="_blank" rel="noopener">StartupOwl: Tailor Brands review</a></li><li><a href="https://websitesetup.org/how-to-use-wix-editor/" target="_blank" rel="noopener">websitesetup.org: How to use Wix</a></li><li><a href="https://www.websitebuilderexpert.com/building-websites/how-to-use-wix/" target="_blank" rel="noopener">Website Builder Expert: How to use Wix</a></li><li><a href="https://www.websiteplanet.com/guides/wix-elements/how-to-upgrade-to-premium-on-wix/" target="_blank" rel="noopener">Website Planet: Upgrading to Premium on Wix</a></li><li><a href="https://www.wix.com/plans" target="_blank" rel="noopener">Wix: Plans</a></li><li><a href="https://support.wix.com/en/article/refund-policy" target="_blank" rel="noopener">Wix Help: Refund policy</a></li></ul></details>
   <p class="disclaim">Independent concept, not affiliated with any company named here. The experiment is a proposal, not a result. Prices are examples.</p></aside>
@@ -298,14 +304,13 @@ const STAGES=[
 ];
 const LOGOS=[{type:"initials",label:"Initials · badge"},{type:"icon",label:"Icon + name"},{type:"initials",label:"Initials · monogram"},{type:"name",label:"Name only"}];
 const REC={
-  idea:{tier:"launch",why:"You're starting from zero. A logo, a site and an LLC in one go puts you on the path to a business bank account."},
-  selling:{tier:"grow",why:"You already have customers. Taking payments online and forming an LLC protects your personal assets once money is moving."},
-  registered:{tier:"grow",why:"You're already registered, so we've taken LLC filing off. The value for you is a store and invoicing."}
+  idea:{tier:"launch",focus:["Website","LLC"],why:()=>`You said ${esc(S.name)} is just an idea. Launch covers what you need first: a website and an LLC, so you can open a business bank account.`},
+  selling:{tier:"grow",focus:["Online store","Invoicing"],why:()=>`You said you're already selling. Grow lets customers buy from ${esc(S.name)} online and pay your invoices, and the LLC protects your personal assets.`},
+  registered:{tier:"grow",focus:["Online store","Invoicing"],why:()=>`You said you already have an LLC, so we removed LLC filing. Grow adds what you're missing: an online store and invoicing.`}
 };
-// "seen" = patterns reported in public reviews and help pages (sources listed in the notes panel).
 const NOTES=[
   {role:"Understand the business context.",
-   how:["The name and tagline appear on every later screen and in the logos.","Business type sets the logo colors and the website pages suggested at launch.","Identical in A and B."],
+   how:["The name and tagline appear on every later screen and in the logos.","Business type sets the logo colors and the website pages suggested at launch.","The screen is identical in A and B. In B, the business type also personalizes the website line on the plan screen."],
    seen:[["Tailor Brands","opens with business name and tagline, then asks for industry."],["Wix","opens with what kind of site you're building, and asks if it's for you or a client."]]},
   {role:"Segment users. This answer is the input to the personalized recommendation.",
    how:["The stage is stored and passed to the plan screen.","Mapping in B: just an idea → Launch; already selling → Grow; registered → Grow, with LLC filing removed.","Skip means no stage, so B falls back to the default recommendation, the same as A.","Both arms are asked the question. Only B uses the answer."],
@@ -314,7 +319,7 @@ const NOTES=[
    how:["Four logos generated from the name and business type, filterable by icon, name or initials.","Regenerate gives a new round. Upload accepts the user's own file.","Decide later keeps the flow moving. Choosing a logo becomes the first launch task.","Identical in A and B, so it doesn't affect the test."],
    seen:[["Tailor Brands","asks for a logo type (icon, name or initials) and styles you like."],["Tailor Brands","design is free; usable-resolution download needs a paid plan. Sign-up comes after the design."]]},
   {role:"Deliver the treatment: the personalized recommendation.",
-   how:["A (control): everyone sees Launch marked Recommended, with no reason.","B (personalized): the recommended plan comes from the stage, with a one-line reason. Registered businesses see LLC filing removed.","The billing toggle, prices and add-ons are identical in both arms. No add-on is pre-selected."],
+   how:["A (control): everyone sees Launch marked Recommended, with no reason.","B (personalized): a Based on your answers row with a Change link, the plan from the stage marked Recommended for you, a reason that quotes the answer, For you tags on the most relevant features, and a website line for their business type. Registered businesses see LLC filing removed.","The billing toggle, prices and add-ons are identical in both arms. No add-on is pre-selected."],
    seen:[["Wix","marks one plan as recommended for your site."],["Wix","flow is choose a plan, then a billing cycle, then checkout. New plans get a 14-day money-back guarantee."],["Reviews","of LLC services flag pre-checked add-on trials as a trust problem."]]},
   {role:"Show value after purchase. Supports the guardrails: early cancellations and refunds.",
    how:["The checklist is built from what was bought.","LLC filing → tax ID (EIN) → business bank account, only when the plan includes an LLC.","Publish your website, only when the plan includes a website.","Choose your logo comes first if the user chose Decide later."],
@@ -397,7 +402,7 @@ function renderNotes(){
     ${row("Problem","People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.")}
     ${row("Hypothesis","Recommending a plan based on the user's business stage will increase purchase conversion compared with the same default recommendation for everyone.")}
     ${row("Control (A)","Everyone sees the same plan marked Recommended, with no reason.")}
-    ${row("Treatment (B)","The recommended plan and its one-line reason adapt to the stage answer.")}
+    ${row("Treatment (B)","The recommendation adapts to the answers: the plan, a reason that quotes what the user said, highlighted features, and a reminder of the answers with a way to change them.")}
     ${row("Primary metric","Purchase conversion: users who reach the plan screen and complete a purchase.")}
     ${row("Guardrails","Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.")}
     ${row("Decision rule","Ship B if conversion is significantly higher and no guardrail gets worse beyond an agreed limit. Otherwise keep A.")}
@@ -458,18 +463,22 @@ function render(entering){
     const rec=S.variant==="A"||!S.stage?{tier:"launch",generic:true}:REC[S.stage]; if(!S.tier) S.tier=rec?rec.tier:"launch";
     h=`<div class="mb-banner">${MB}14-day money-back guarantee on all plans</div>
     <div class="p-head"><h1>Choose the plan that's right for ${esc(S.name)}</h1>
+      ${!rec.generic?`<div class="answers"><span>Based on your answers:</span><span class="ans">${esc(ind().label)}</span><span class="ans">${STAGES.find(x=>x.id===S.stage).t}</span><button class="btn link" data-goto-stage>Change</button></div>`:""}
       <div class="includes"><span>All plans include:</span><span>${CHECK}High-res logo files</span><span>${CHECK}Brand kit</span><span>${CHECK}Cancel anytime</span></div>
       <div class="billing"><div class="seg" role="group" aria-label="Billing cycle">${CYCLES.map(c=>`<button data-cycle="${c.n}" aria-pressed="${S.cycle===c.n}">${c.label}${c.n>1?`<span class="off">Save up to ${saveUpTo(c.n)}%</span>`:""}</button>`).join("")}</div></div>
     </div>
     <div class="tiers" role="radiogroup" aria-label="Plans">${TIERS.map(t=>{
       const isRec=rec&&t.id===rec.tier, isSel=S.tier===t.id;
-      const feats=[...t.f.map(f=>`<li class="${f.includes("LLC")&&S.stage==="registered"&&S.variant==="B"?"skip":""}">${CHECK}<span>${f}</span></li>`), ...(S.cycle>=12&&t.id!=="brand"?[`<li>${CHECK}<span>Free domain for <span style="white-space:nowrap">1 year${GIFT}</span></span></li>`]:[])].join("");
+      const perso=!rec.generic;
+      const featText=f=>perso&&f.includes("Website")?`<b>Website</b> with a ${ind().pages[1]} page`:f;
+      const forYou=f=>perso&&isRec&&rec.focus.some(k=>f.includes(k))&&!(f.includes("LLC")&&S.stage==="registered")?`<span class="foryou">For you</span>`:"";
+      const feats=[...t.f.map(f=>`<li class="${f.includes("LLC")&&S.stage==="registered"&&perso?"skip":""}">${CHECK}<span>${featText(f)}${forYou(f)}</span></li>`), ...(S.cycle>=12&&t.id!=="brand"?[`<li>${CHECK}<span>Free domain for <span style="white-space:nowrap">1 year${GIFT}</span></span></li>`]:[])].join("");
       return `<div class="tier ${isRec?"is-rec":""} ${isSel?"is-sel":""}">
-        <div class="rec ${isRec?"":"empty"}">${isRec?"RECOMMENDED":""}</div>
+        <div class="rec ${isRec?"":"empty"}">${isRec?(rec.generic?"RECOMMENDED":"RECOMMENDED FOR YOU"):""}</div>
         <h3>${t.name}</h3><p class="for">${t.for}</p>
         ${priceHTML(price(t))}${S.cycle>1?`<span class="savebadge">SAVE $${Math.round((t.m-price(t))*S.cycle).toLocaleString("en-US")}</span>`:""}
         <button class="select" role="radio" aria-checked="${isSel}" data-tier="${t.id}">${isSel?"Selected":"Select"}</button>
-        ${isRec&&!rec.generic?`<div class="recbox"><b><span aria-hidden="true">✦</span>${t.name} is recommended for ${esc(S.name)}</b>${rec.why}</div>`:""}
+        ${isRec&&!rec.generic?`<div class="recbox"><b><span aria-hidden="true">✦</span>${t.name} fits where you are</b>${rec.why()}</div>`:""}
         <ul class="feats">${feats}</ul></div>`}).join("")}</div>
     <div class="addons"><h3>Add to your plan</h3><p class="hint">Optional. Nothing is pre-selected.</p>
       ${freeDomain()?"":`<label class="addon" for="adDomain"><input type="checkbox" id="adDomain" ${S.addons.domain?"checked":""}><span>Custom domain: <b>${esc(domainName())}</b></span><span class="p">+$1.50/mo</span></label>`}
@@ -545,6 +554,7 @@ function bind(){
   };
   const lt=$("#later"); if(lt) lt.onclick=()=>{S.logo=null;go(1)};
   q("[data-goto-logo]",()=>go(2-S.step));
+  q("[data-goto-stage]",()=>go(1-S.step));
   q("[data-tier]",e=>{S.tier=e.dataset.tier;render()});
   q("[data-cycle]",e=>{S.cycle=+e.dataset.cycle;render()});
   const ad=$("#adDomain"),ae=$("#adEmail"),aa=$("#adAgent");
