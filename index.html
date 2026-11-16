@@ -455,7 +455,7 @@ function render(entering){
     <div class="actions"><button class="btn ghost" id="back">Back</button><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="btn link" id="later">Decide later</button><button class="btn primary" id="next" ${S.logo!==null?"":"disabled"}>Use this logo</button></div></div>`;
   }
   if(S.step===3){
-    const rec=S.variant==="A"?{tier:"launch",generic:true}:(S.stage?REC[S.stage]:null); if(!S.tier) S.tier=rec?rec.tier:"launch";
+    const rec=S.variant==="A"||!S.stage?{tier:"launch",generic:true}:REC[S.stage]; if(!S.tier) S.tier=rec?rec.tier:"launch";
     h=`<div class="mb-banner">${MB}14-day money-back guarantee on all plans</div>
     <div class="p-head"><h1>Choose the plan that's right for ${esc(S.name)}</h1>
       <div class="includes"><span>All plans include:</span><span>${CHECK}High-res logo files</span><span>${CHECK}Brand kit</span><span>${CHECK}Cancel anytime</span></div>
