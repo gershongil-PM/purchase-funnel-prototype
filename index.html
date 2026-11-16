@@ -476,7 +476,7 @@ function render(entering){
       <label class="addon" for="adEmail"><input type="checkbox" id="adEmail" ${S.addons.email?"checked":""}><span>Professional email for 1 user</span><span class="p">+$3.00/mo</span></label>
       ${hasLLC()?`<label class="addon" for="adAgent"><input type="checkbox" id="adAgent" ${S.addons.agent?"checked":""}><span>Registered agent service</span><span class="p">+$9.99/mo</span></label>`:""}
     </div>
-    <div class="checkout"><div><div class="mock-label">Your total</div><div class="amt">${money(total())} <small>/mo, billed ${cyc().every}</small></div></div>
+    <div class="checkout" style="justify-content:flex-end">
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" id="back">Back</button><button class="btn primary" id="next">Continue to checkout</button></div></div>
     <p class="fine">Changed your mind? Cancel within 14 days and get all your money back.<br>This is a prototype, so the prices shown are examples, not real prices.</p>`;
   }
