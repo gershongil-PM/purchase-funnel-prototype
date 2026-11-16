@@ -14,7 +14,7 @@ A clickable concept prototype of a purchase funnel for people starting a small b
 
 One hypothesis runs through the whole flow: recommending a plan based on the user's business stage increases purchase conversion compared with the same default recommendation for everyone.
 
-- **Control (A):** everyone sees the same plan marked Recommended, with no reason.
+- **Control (A):** everyone sees the same plan marked Recommended.
 - **Treatment (B):** the recommended plan and a one-line reason adapt to the stage answer.
 - **Primary metric:** purchase conversion from the plan screen.
 - **Guardrails:** refunds in the first 14 days, early cancellations, average revenue per purchaser.
