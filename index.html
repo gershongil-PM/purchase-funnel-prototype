@@ -193,6 +193,34 @@ input[type=text]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 1p
 .answers .btn.link{font-size:14px;padding:4px 6px}
 .foryou{display:inline-block;margin-left:6px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--purple);background:var(--lav);border-radius:4px;padding:1px 6px;vertical-align:1px;white-space:nowrap}
 
+/* Checkout */
+.co-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,330px);gap:20px;align-items:start}
+@media (max-width:820px){.co-grid{grid-template-columns:minmax(0,1fr)}}
+.co-main{display:flex;flex-direction:column;gap:20px;min-width:0}
+.co-sec{display:flex;flex-direction:column;gap:12px;border:1px solid var(--line);border-radius:12px;padding:20px}
+.co-sec h3,.co-sum h3{font-family:var(--display);font-weight:500;font-size:20px;margin:0}
+.hint{font-size:14px;color:var(--muted);margin:0;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hint svg{width:18px;height:18px}
+.pay-opts{display:flex;flex-direction:column;gap:8px}
+.pay{font:inherit;font-size:15px;display:flex;align-items:center;gap:12px;text-align:left;padding:13px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.pay:hover{border-color:var(--ink)}
+.pay .rad{width:18px;height:18px;border-radius:50%;border:1.5px solid #9A9EAD;flex:none}
+.pay[aria-checked="true"]{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.pay[aria-checked="true"] .rad{border-color:var(--blue);background:var(--blue);box-shadow:inset 0 0 0 3px #FFFFFF}
+.card-fields{display:flex;flex-direction:column;gap:10px}
+.card-fields .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card-fields input{background:var(--soft);cursor:not-allowed;min-width:0}
+.demo-note{margin:0;font-size:13px;color:var(--muted);background:var(--soft);border-radius:6px;padding:8px 10px}
+.co-sum{background:var(--lav-2);border:1px solid #DCD6FB;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.co-sum ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.co-sum li{display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.co-sum li b{font-weight:500;display:block}
+.co-sum li small{color:var(--muted);font-size:13px}
+.co-sum li span{font-variant-numeric:tabular-nums;white-space:nowrap}
+.co-save{margin:0;font-size:14px;font-weight:600;color:#116B2E}
+.co-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #DCD6FB;padding-top:14px}
+.co-total b{font-family:var(--display);font-size:28px;font-weight:500;font-variant-numeric:tabular-nums}
+
 /* Launch step */
 .progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
 .progress .track{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
@@ -238,7 +266,7 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
 </div></header>
 
 <div class="page"><div class="wrap">
-  <ol class="stepper" id="stepper" aria-label="Progress"><li class="now" aria-current="step"><span class="bar"></span>Your business</li><li class=""><span class="bar"></span>Your stage</li><li class=""><span class="bar"></span>Your logo</li><li class=""><span class="bar"></span>Your plan</li><li class=""><span class="bar"></span>Launch</li></ol>
+  <ol class="stepper" id="stepper" aria-label="Progress"><li class="now" aria-current="step"><span class="bar"></span>Your business</li><li class=""><span class="bar"></span>Your stage</li><li class=""><span class="bar"></span>Your logo</li><li class=""><span class="bar"></span>Your plan</li><li class=""><span class="bar"></span>Checkout</li><li class=""><span class="bar"></span>Launch</li></ol>
   <noscript>
     <section class="card walk">
       <p class="walk-note">This prototype is interactive and needs JavaScript to click through. Here is what each step does.</p>
@@ -247,6 +275,7 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
         <li><b>Your stage.</b> Choose: just an idea, already selling, or already registered. The answer decides which plan is recommended.</li>
         <li><b>Your logo.</b> Four logos generated from the business name, filtered by icon, name or initials, and shown on a business card and a profile picture.</li>
         <li><b>Your plan.</b> Three plans (Brand, Launch, Grow) with one recommended and a one-line reason. A billing toggle for monthly, yearly, 2 years and 3 years shows the saving for each. Add-ons are optional and nothing is pre-selected.</li>
+        <li><b>Checkout.</b> Order summary with the total due today and the renewal price, account email, and payment method. Payment fields are turned off in the prototype.</li>
         <li><b>Launch.</b> A checklist of next steps: LLC filing, tax ID (EIN), publishing the website and opening a business bank account.</li>
       </ol>
       <p class="walk-note">The PM notes describe one experiment for the whole flow: a generic plan recommendation (A) vs. one personalized by business stage (B), measured by purchase conversion, with refunds, early cancellations and revenue per purchaser as guardrails. Each step's notes explain its role in that hypothesis and its business rules.</p>
@@ -272,10 +301,10 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
     <div><dt>Guardrails</dt><dd>Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.</dd></div>
     <div><dt>Decision rule</dt><dd>Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.</dd></div>
     <div><dt>Before launch</dt><dd>Set the required sample size and test duration from the current conversion rate and the smallest improvement worth detecting.</dd></div>
-    <div><dt>Events to track</dt><dd>onboarding_started, stage_selected, logo_selected, plan_viewed (variant, recommended plan), plan_selected (matches recommendation?), purchase_completed (variant, plan, billing cycle, amount).</dd></div>
+    <div><dt>Events to track</dt><dd>onboarding_started, stage_selected, logo_selected, plan_viewed (variant, recommended plan), plan_selected (matches recommendation?), checkout_started, purchase_completed (variant, plan, billing cycle, amount).</dd></div>
     <div><dt>Status</dt><dd>Not run. This shows how I would validate the hypothesis, not a result.</dd></div>
   </dl></details>
-  <div class="screen"><span class="eyebrow-s">This screen · 1 of 5</span><p class="stepname">Your business</p>
+  <div class="screen"><span class="eyebrow-s">This screen · 1 of 6</span><p class="stepname">Your business</p>
   <dl><div><dt>Role in the hypothesis</dt><dd>Understand the business context.</dd></div><div><dt>How it works</dt><dd><ul class="rules"><li>The name and tagline appear on every later screen and in the logos.</li><li>Business type sets the logo colors and the website pages suggested at launch.</li><li>The screen is identical in A and B. In B, the business type also personalizes the website line on the plan screen.</li></ul></dd></div></dl></div>
   <div class="seen"><dt>Seen in the market</dt><p><b>Tailor Brands</b> opens with business name and tagline, then asks for industry.</p><p><b>Wix</b> opens with what kind of site you're building, and asks if it's for you or a client.</p></div>
   <details><summary>Sources</summary><ul><li><a href="https://www.thesmbguide.com/tailor-brands" target="_blank" rel="noopener">thesmbguide.com: Tailor Brands review</a></li><li><a href="https://wbcomdesigns.com/tailor-brands-logo-maker/" target="_blank" rel="noopener">wbcomdesigns.com: Tailor Brands logo maker</a></li><li><a href="https://www.creativebloq.com/reviews/tailor-brands" target="_blank" rel="noopener">Creative Bloq: Tailor Brands review</a></li><li><a href="https://logo.com/guides/logo-vs-tailor-brands" target="_blank" rel="noopener">logo.com: Logo.com vs Tailor Brands</a></li><li><a href="https://itbrief.news/story/tailor-brands-adds-integrated-banking-for-new-us-llcs" target="_blank" rel="noopener">IT Brief: Tailor Brands adds integrated banking</a></li><li><a href="https://startupowl.com/reviews/tailor-brands" target="_blank" rel="noopener">StartupOwl: Tailor Brands review</a></li><li><a href="https://websitesetup.org/how-to-use-wix-editor/" target="_blank" rel="noopener">websitesetup.org: How to use Wix</a></li><li><a href="https://www.websitebuilderexpert.com/building-websites/how-to-use-wix/" target="_blank" rel="noopener">Website Builder Expert: How to use Wix</a></li><li><a href="https://www.websiteplanet.com/guides/wix-elements/how-to-upgrade-to-premium-on-wix/" target="_blank" rel="noopener">Website Planet: Upgrading to Premium on Wix</a></li><li><a href="https://www.wix.com/plans" target="_blank" rel="noopener">Wix: Plans</a></li><li><a href="https://support.wix.com/en/article/refund-policy" target="_blank" rel="noopener">Wix Help: Refund policy</a></li></ul></details>
@@ -284,7 +313,7 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
 </div></div>
 
 <script>
-const STEPS=["Your business","Your stage","Your logo","Your plan","Launch"];
+const STEPS=["Your business","Your stage","Your logo","Your plan","Checkout","Launch"];
 const INDUSTRIES=[
   {id:"food",label:"Food & drink",c:["#B4472A","#F2C46D"],pages:["Home","Menu","About","Contact"]},
   {id:"beauty",label:"Beauty & wellness",c:["#8A3B6E","#F0B8C8"],pages:["Home","Services","Book","Contact"]},
@@ -322,6 +351,9 @@ const NOTES=[
   {role:"Deliver the treatment: the personalized recommendation.",
    how:["A (control): everyone sees Launch marked Recommended.","B (personalized): a Based on your answers row with a Change link, the plan from the stage marked Recommended for you, a reason that quotes the answer, For you tags on the most relevant features, and a website line for their business type. Registered businesses see LLC filing removed.","The billing toggle, prices and add-ons are identical in both arms. No add-on is pre-selected."],
    seen:[["Wix","marks one plan as recommended for your site."],["Wix","flow is choose a plan, then a billing cycle, then checkout. New plans get a 14-day money-back guarantee."],["Reviews","of LLC services flag pre-checked add-on trials as a trust problem."]]},
+  {role:"Where the primary metric is counted: a purchase completed here is the numerator.",
+   how:["Identical in A and B, so any difference in purchases comes from the plan screen.","Shows the plan, billing cycle, add-ons, savings and the total due today, with the renewal price stated up front.","Account creation happens here, after the user has seen value, not at the start.","Payment fields are turned off in this prototype. Nothing is collected or charged."],
+   seen:[["Wix","checkout comes after choosing a billing cycle and accepts card, Apple Pay and PayPal."],["Tailor Brands","asks you to register after the design, not before."]]},
   {role:"Show value after purchase. Supports the guardrails: early cancellations and refunds.",
    how:["The checklist is built from what was bought.","LLC filing → tax ID (EIN) → business bank account, only when the plan includes an LLC.","Publish your website, only when the plan includes a website.","Choose your logo comes first if the user chose Decide later."],
    seen:[["Tailor Brands","(2026) lets new LLC customers open a business bank account in the same flow, without re-entering company details."],["Wix","suggests pages like About, FAQ and Contact based on site type."]]}
@@ -341,7 +373,7 @@ const SOURCES=[
 ];
 
 
-const S={step:0,name:"Juniper & Rye",tagline:"",industry:"food",stage:null,logoType:"all",logo:null,logoSeed:0,upload:null,uploadErr:"",tier:null,cycle:12,variant:"B",briefOverride:{},addons:{domain:false,email:false,agent:false}};
+const S={step:0,name:"Juniper & Rye",tagline:"",industry:"food",stage:null,logoType:"all",logo:null,logoSeed:0,upload:null,uploadErr:"",tier:null,cycle:12,variant:"B",briefOverride:{},email:"",pay:"card",addons:{domain:false,email:false,agent:false}};
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const ind=()=>INDUSTRIES.find(i=>i.id===S.industry)||INDUSTRIES[0];
@@ -410,7 +442,7 @@ function renderNotes(){
     ${row("Guardrails","Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.")}
     ${row("Decision rule","Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.")}
     ${row("Before launch","Set the required sample size and test duration from the current conversion rate and the smallest improvement worth detecting.")}
-    ${row("Events to track","onboarding_started, stage_selected, logo_selected, plan_viewed (variant, recommended plan), plan_selected (matches recommendation?), purchase_completed (variant, plan, billing cycle, amount).")}
+    ${row("Events to track","onboarding_started, stage_selected, logo_selected, plan_viewed (variant, recommended plan), plan_selected (matches recommendation?), checkout_started, purchase_completed (variant, plan, billing cycle, amount).")}
     ${row("Status","Not run. This shows how I would validate the hypothesis, not a result.")}
   </dl></details>
   <div class="screen"><span class="eyebrow-s">This screen · ${S.step+1} of ${STEPS.length}</span><p class="stepname">${STEPS[S.step]}</p>
@@ -494,6 +526,37 @@ function render(entering){
     <p class="fine">Changed your mind? Cancel within 14 days and get all your money back.<br>This is a prototype, so the prices shown are examples, not real prices.</p>`;
   }
   if(S.step===4){
+    const t=TIERS.find(x=>x.id===S.tier)||TIERS[1], c=cyc(), n=S.cycle;
+    const lines=[[`${t.name} plan, ${c.label.toLowerCase()}`,`${money(price(t))}/mo × ${n}`,price(t)*n]];
+    if(freeDomain()) lines.push([`Custom domain: ${esc(domainName())}`,"First year",0]);
+    else if(S.addons.domain) lines.push([`Custom domain: ${esc(domainName())}`,`$1.50/mo × ${n}`,1.5*n]);
+    if(S.addons.email) lines.push(["Professional email",`$3.00/mo × ${n}`,3*n]);
+    if(S.addons.agent&&hasLLC()) lines.push(["Registered agent service",`$9.99/mo × ${n}`,9.99*n]);
+    const due=lines.reduce((a,l)=>a+l[2],0), saved=n>1?Math.round((t.m-price(t))*n):0;
+    const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email);
+    h=`<div style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">Almost there</span><h1>Checkout</h1></div>
+    <div class="co-grid">
+      <div class="co-main">
+        <section class="co-sec"><h3>1. Your account</h3><p class="hint">Save ${esc(S.name)} and get your files. We ask now, after you've seen your brand, not at the start.</p>
+          <label class="field" for="coEmail">Email<input type="text" inputmode="email" id="coEmail" value="${esc(S.email)}" placeholder="you@example.com" autocomplete="email"></label>
+          <p class="upload-err" id="emErr" ${S.email&&!emailOk?"":"hidden"}>Enter an email address like name@example.com.</p></section>
+        <section class="co-sec"><h3>2. Payment</h3>
+          <div class="pay-opts" role="radiogroup" aria-label="Payment method">${[["card","Credit or debit card"],["paypal","PayPal"],["apple","Apple Pay"]].map(([v,l])=>`<button class="pay" role="radio" aria-checked="${S.pay===v}" data-pay="${v}"><span class="rad"></span>${l}</button>`).join("")}</div>
+          ${S.pay==="card"?`<div class="card-fields"><input type="text" disabled placeholder="Card number" aria-label="Card number (disabled in prototype)"><div class="two"><input type="text" disabled placeholder="MM / YY" aria-label="Expiry (disabled in prototype)"><input type="text" disabled placeholder="CVC" aria-label="CVC (disabled in prototype)"></div></div>`:`<p class="hint">You'll confirm with ${S.pay==="paypal"?"PayPal":"Apple Pay"} in the next window.</p>`}
+          <p class="demo-note">Prototype: payment fields are turned off. Nothing is collected or charged.</p></section>
+      </div>
+      <aside class="co-sum"><h3>Order summary</h3>
+        <ul>${lines.map(([a,b,v])=>`<li><div><b>${a}</b><small>${b}</small></div><span>${v?money(v):"Free"}</span></li>`).join("")}</ul>
+        ${saved?`<p class="co-save">You save $${saved.toLocaleString("en-US")} vs. paying monthly</p>`:""}
+        <div class="co-total"><span>Due today</span><b>${money(due)}</b></div>
+        <p class="hint">Renews ${c.every} at ${money(n===1?total():total()*n)} unless you cancel. Cancel anytime in your account settings.</p>
+        <p class="hint">${MB}14-day money-back guarantee</p>
+      </aside>
+    </div>
+    <div class="actions"><button class="btn ghost" id="back">Back</button><button class="btn primary" id="pay" ${emailOk?"":"disabled"}>Pay ${money(due)}</button></div>
+    <p class="fine">Prices are examples, not real prices. Taxes would be added at payment where they apply.</p>`;
+  }
+  if(S.step===5){
     const t=TIERS.find(x=>x.id===S.tier);
     const items=[
       S.logo===null?{c:"",t:"Choose your logo",s:"Your logo ideas are saved. Pick one or upload your own whenever you're ready.",tag:"Next step",next:true,btn:true}:{c:"ok",t:"Logo and brand kit",s:S.logo==="upload"?"Your logo is saved in your brand kit":"High-res files unlocked",tag:"Done"},
@@ -559,13 +622,16 @@ function bind(){
   const lt=$("#later"); if(lt) lt.onclick=()=>{S.logo=null;go(1)};
   q("[data-goto-logo]",()=>go(2-S.step));
   q("[data-goto-stage]",()=>go(1-S.step));
+  q("[data-pay]",e=>{S.pay=e.dataset.pay;render()});
+  const em=$("#coEmail"); if(em){em.addEventListener("input",()=>{S.email=em.value.trim();$("#pay").disabled=!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email)});em.addEventListener("blur",()=>{$("#emErr").hidden=!S.email||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email)})}
+  const pb=$("#pay"); if(pb) pb.onclick=()=>{pb.disabled=true;pb.textContent="Processing…";setTimeout(()=>go(1),700)};
   q("[data-tier]",e=>{S.tier=e.dataset.tier;render()});
   q("[data-cycle]",e=>{S.cycle=+e.dataset.cycle;render()});
   const ad=$("#adDomain"),ae=$("#adEmail"),aa=$("#adAgent");
   if(ad&&!ad.disabled) ad.onchange=()=>{S.addons.domain=ad.checked;render()};
   if(ae) ae.onchange=()=>{S.addons.email=ae.checked;render()};
   if(aa) aa.onchange=()=>{S.addons.agent=aa.checked;render()};
-  const r=$("#restart"); if(r) r.onclick=()=>{Object.assign(S,{stage:null,logo:null,logoSeed:0,upload:null,uploadErr:"",logoType:"all",tier:null,addons:{domain:false,email:false,agent:false}});go(-S.step)};
+  const r=$("#restart"); if(r) r.onclick=()=>{Object.assign(S,{email:"",pay:"card",stage:null,logo:null,logoSeed:0,upload:null,uploadErr:"",logoType:"all",tier:null,addons:{domain:false,email:false,agent:false}});go(-S.step)};
   const c=$("#cta"); if(c) c.onclick=()=>{if(S.logo===null){go(2-S.step);return}c.textContent="Done in the real product";c.disabled=true};
 }
 $("#notesToggle").addEventListener("change",e=>{$("#notes").hidden=!e.target.checked;$("#grid").classList.toggle("no-notes",!e.target.checked)});

@@ -8,7 +8,8 @@ A clickable concept prototype of a purchase funnel for people starting a small b
 2. **Your stage:** just an idea, already selling, or registered. The answer drives the plan recommendation.
 3. **Your logo:** four generated logos, filtered by type (icon, name, initials), shown on a business card and a profile picture.
 4. **Your plan:** three plans with a recommended one and a reason, a billing toggle (monthly, yearly, 2 years, 3 years) with savings, and optional add-ons. Nothing is pre-selected.
-5. **Launch:** a checklist of next steps (LLC, tax ID, website, business bank account).
+5. **Checkout:** order summary with the total due today and the renewal price, account email, and payment method. Payment fields are turned off: nothing is collected or charged.
+6. **Launch:** a checklist of next steps (LLC, tax ID, website, business bank account).
 
 ## The experiment
 
