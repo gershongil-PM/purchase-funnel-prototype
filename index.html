@@ -296,7 +296,7 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
     <div><dt>Problem</dt><dd>People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.</dd></div>
     <div><dt>Hypothesis</dt><dd>Personalizing the plan recommendation and its supporting messaging based on users' business stage and stated needs will increase purchase conversion compared with a generic recommendation.</dd></div>
     <div><dt>Control (A)</dt><dd>Everyone sees the same plan marked Recommended.</dd></div>
-    <div><dt>Treatment (B)</dt><dd>The recommendation adapts to the answers: the plan, a reason that quotes what the user said, and highlighted features.</dd></div>
+    <div><dt>Treatment (B)</dt><dd>The recommendation adapts to the answers: the plan, a short reason tied to their stage, and highlighted features.</dd></div>
     <div><dt>Primary metric</dt><dd>Plan-to-purchase conversion rate = unique users completing a purchase ÷ unique users exposed to the plan screen. This isolates the plan step, where the treatment is.</dd></div>
     <div><dt>Guardrails</dt><dd>Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.</dd></div>
     <div><dt>Decision rule</dt><dd>Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.</dd></div>
@@ -334,9 +334,9 @@ const STAGES=[
 ];
 const LOGOS=[{type:"initials",label:"Initials · badge"},{type:"icon",label:"Icon + name"},{type:"initials",label:"Initials · monogram"},{type:"name",label:"Name only"}];
 const REC={
-  idea:{tier:"launch",focus:["Website","LLC"],why:()=>`You said ${esc(S.name)} is just an idea. Launch covers what you need first: a website and an LLC, so you can open a business bank account.`},
-  selling:{tier:"grow",focus:["Online store","Invoicing"],why:()=>`You said you're already selling. Grow lets customers buy from ${esc(S.name)} online and pay your invoices, and the LLC protects your personal assets.`},
-  registered:{tier:"grow",focus:["Online store","Invoicing"],why:()=>`You said you already have an LLC, so we removed LLC filing. Grow adds what you're missing: an online store and invoicing.`}
+  idea:{tier:"launch",focus:["Website","LLC"],why:()=>`Everything to start officially: a website and your LLC.`},
+  selling:{tier:"grow",focus:["Online store","Invoicing"],why:()=>`Sell online, send invoices, and protect your personal assets with an LLC.`},
+  registered:{tier:"grow",focus:["Online store","Invoicing"],why:()=>`You already have an LLC, so we removed it. Add an online store and invoicing.`}
 };
 const NOTES=[
   {role:"Understand the business context.",
@@ -349,7 +349,7 @@ const NOTES=[
    how:["Four logos generated from the name and business type, filterable by icon, name or initials.","Regenerate gives a new round. Upload accepts the user's own file.","Decide later keeps the flow moving. Choosing a logo becomes the first launch task.","Identical in A and B, so it doesn't affect the test."],
    seen:[["Tailor Brands","asks for a logo type (icon, name or initials) and styles you like."],["Tailor Brands","design is free; usable-resolution download needs a paid plan. Sign-up comes after the design."]]},
   {role:"Deliver the treatment: the personalized recommendation.",
-   how:["A (control): everyone sees Launch marked Recommended.","B (personalized): the plan from the stage marked Recommended for you, a reason that quotes the answer, For you tags on the most relevant features, and a website line for their business type. Registered businesses see LLC filing removed.","The billing toggle, prices and add-ons are identical in both arms. No add-on is pre-selected."],
+   how:["A (control): everyone sees Launch marked Recommended.","B (personalized): the plan from the stage marked Recommended for you, a short reason tied to the answer, For you tags on the most relevant features, and a website line for their business type. Registered businesses see LLC filing removed.","The billing toggle, prices and add-ons are identical in both arms. No add-on is pre-selected."],
    seen:[["Wix","marks one plan as recommended for your site."],["Wix","flow is choose a plan, then a billing cycle, then checkout. New plans get a 14-day money-back guarantee."],["Reviews","of LLC services flag pre-checked add-on trials as a trust problem."]]},
   {role:"Where the primary metric is counted: a purchase completed here is the numerator.",
    how:["Identical in A and B, so any difference in purchases comes from the plan screen.","Shows the plan, billing cycle, add-ons, savings and the total due today, with the renewal price stated up front.","Account creation happens here, after the user has seen value, not at the start.","Payment fields are turned off in this prototype. Nothing is collected or charged."],
@@ -437,7 +437,7 @@ function renderNotes(){
     ${row("Problem","People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.")}
     ${row("Hypothesis","Personalizing the plan recommendation and its supporting messaging based on users' business stage and stated needs will increase purchase conversion compared with a generic recommendation.")}
     ${row("Control (A)","Everyone sees the same plan marked Recommended.")}
-    ${row("Treatment (B)","The recommendation adapts to the answers: the plan, a reason that quotes what the user said, and highlighted features.")}
+    ${row("Treatment (B)","The recommendation adapts to the answers: the plan, a short reason tied to their stage, and highlighted features.")}
     ${row("Primary metric","Plan-to-purchase conversion rate = unique users completing a purchase ÷ unique users exposed to the plan screen. This isolates the plan step, where the treatment is.")}
     ${row("Guardrails","Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.")}
     ${row("Decision rule","Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.")}
