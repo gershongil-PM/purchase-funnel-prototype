@@ -296,7 +296,7 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
     <div><dt>Problem</dt><dd>People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.</dd></div>
     <div><dt>Hypothesis</dt><dd>Personalizing the plan recommendation and its supporting messaging based on users' business stage and stated needs will increase purchase conversion compared with a generic recommendation.</dd></div>
     <div><dt>Control (A)</dt><dd>Everyone sees the same plan marked Recommended.</dd></div>
-    <div><dt>Treatment (B)</dt><dd>The recommendation adapts to the answers: the plan, a reason that quotes what the user said, highlighted features, and a reminder of the answers with a way to change them.</dd></div>
+    <div><dt>Treatment (B)</dt><dd>The recommendation adapts to the answers: the plan, a reason that quotes what the user said, and highlighted features.</dd></div>
     <div><dt>Primary metric</dt><dd>Plan-to-purchase conversion rate = unique users completing a purchase ÷ unique users exposed to the plan screen. This isolates the plan step, where the treatment is.</dd></div>
     <div><dt>Guardrails</dt><dd>Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.</dd></div>
     <div><dt>Decision rule</dt><dd>Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.</dd></div>
@@ -349,7 +349,7 @@ const NOTES=[
    how:["Four logos generated from the name and business type, filterable by icon, name or initials.","Regenerate gives a new round. Upload accepts the user's own file.","Decide later keeps the flow moving. Choosing a logo becomes the first launch task.","Identical in A and B, so it doesn't affect the test."],
    seen:[["Tailor Brands","asks for a logo type (icon, name or initials) and styles you like."],["Tailor Brands","design is free; usable-resolution download needs a paid plan. Sign-up comes after the design."]]},
   {role:"Deliver the treatment: the personalized recommendation.",
-   how:["A (control): everyone sees Launch marked Recommended.","B (personalized): a Based on your answers row with a Change link, the plan from the stage marked Recommended for you, a reason that quotes the answer, For you tags on the most relevant features, and a website line for their business type. Registered businesses see LLC filing removed.","The billing toggle, prices and add-ons are identical in both arms. No add-on is pre-selected."],
+   how:["A (control): everyone sees Launch marked Recommended.","B (personalized): the plan from the stage marked Recommended for you, a reason that quotes the answer, For you tags on the most relevant features, and a website line for their business type. Registered businesses see LLC filing removed.","The billing toggle, prices and add-ons are identical in both arms. No add-on is pre-selected."],
    seen:[["Wix","marks one plan as recommended for your site."],["Wix","flow is choose a plan, then a billing cycle, then checkout. New plans get a 14-day money-back guarantee."],["Reviews","of LLC services flag pre-checked add-on trials as a trust problem."]]},
   {role:"Where the primary metric is counted: a purchase completed here is the numerator.",
    how:["Identical in A and B, so any difference in purchases comes from the plan screen.","Shows the plan, billing cycle, add-ons, savings and the total due today, with the renewal price stated up front.","Account creation happens here, after the user has seen value, not at the start.","Payment fields are turned off in this prototype. Nothing is collected or charged."],
@@ -437,7 +437,7 @@ function renderNotes(){
     ${row("Problem","People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.")}
     ${row("Hypothesis","Personalizing the plan recommendation and its supporting messaging based on users' business stage and stated needs will increase purchase conversion compared with a generic recommendation.")}
     ${row("Control (A)","Everyone sees the same plan marked Recommended.")}
-    ${row("Treatment (B)","The recommendation adapts to the answers: the plan, a reason that quotes what the user said, highlighted features, and a reminder of the answers with a way to change them.")}
+    ${row("Treatment (B)","The recommendation adapts to the answers: the plan, a reason that quotes what the user said, and highlighted features.")}
     ${row("Primary metric","Plan-to-purchase conversion rate = unique users completing a purchase ÷ unique users exposed to the plan screen. This isolates the plan step, where the treatment is.")}
     ${row("Guardrails","Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.")}
     ${row("Decision rule","Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.")}
@@ -499,7 +499,6 @@ function render(entering){
     const rec=S.variant==="A"||!S.stage?{tier:"launch",generic:true}:REC[S.stage]; if(!S.tier) S.tier=rec?rec.tier:"launch";
     h=`<div class="mb-banner">${MB}14-day money-back guarantee on all plans</div>
     <div class="p-head"><h1>Choose the plan that's right for ${esc(S.name)}</h1>
-      ${!rec.generic?`<div class="answers"><span>Based on your answers:</span><span class="ans">${esc(ind().label)}</span><span class="ans">${STAGES.find(x=>x.id===S.stage).t}</span><button class="btn link" data-goto-stage>Change</button></div>`:""}
       <div class="includes"><span>All plans include:</span><span>${CHECK}High-res logo files</span><span>${CHECK}Brand kit</span><span>${CHECK}Cancel anytime</span></div>
       <div class="billing"><div class="seg" role="group" aria-label="Billing cycle">${CYCLES.map(c=>`<button data-cycle="${c.n}" aria-pressed="${S.cycle===c.n}">${c.label}${c.n>1?`<span class="off">Save up to ${saveUpTo(c.n)}%</span>`:""}</button>`).join("")}</div></div>
     </div>
@@ -620,7 +619,6 @@ function bind(){
   };
   const lt=$("#later"); if(lt) lt.onclick=()=>{S.logo=null;go(1)};
   q("[data-goto-logo]",()=>go(2-S.step));
-  q("[data-goto-stage]",()=>go(1-S.step));
   q("[data-pay]",e=>{S.pay=e.dataset.pay;render()});
   const em=$("#coEmail"); if(em){em.addEventListener("input",()=>{S.email=em.value.trim();$("#pay").disabled=!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email)});em.addEventListener("blur",()=>{$("#emErr").hidden=!S.email||/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(S.email)})}
   const pb=$("#pay"); if(pb) pb.onclick=()=>{pb.disabled=true;pb.textContent="Processing…";setTimeout(()=>go(1),700)};
