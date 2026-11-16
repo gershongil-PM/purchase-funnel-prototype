@@ -265,12 +265,13 @@ aside.notes{background:var(--surface);border:1px solid var(--line);border-radius
   <dl>
     <div><dt>Objective</dt><dd>Improve purchase conversion with a personalized onboarding-to-purchase experience.</dd></div>
     <div><dt>Problem</dt><dd>People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.</dd></div>
-    <div><dt>Hypothesis</dt><dd>Recommending a plan based on the user's business stage will increase purchase conversion compared with the same default recommendation for everyone.</dd></div>
+    <div><dt>Hypothesis</dt><dd>Personalizing the plan recommendation and its supporting messaging based on users' business stage and stated needs will increase purchase conversion compared with a generic recommendation.</dd></div>
     <div><dt>Control (A)</dt><dd>Everyone sees the same plan marked Recommended.</dd></div>
     <div><dt>Treatment (B)</dt><dd>The recommendation adapts to the answers: the plan, a reason that quotes what the user said, highlighted features, and a reminder of the answers with a way to change them.</dd></div>
-    <div><dt>Primary metric</dt><dd>Purchase conversion: users who reach the plan screen and complete a purchase.</dd></div>
+    <div><dt>Primary metric</dt><dd>Plan-to-purchase conversion rate = unique users completing a purchase ÷ unique users exposed to the plan screen. This isolates the plan step, where the treatment is.</dd></div>
     <div><dt>Guardrails</dt><dd>Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.</dd></div>
-    <div><dt>Decision rule</dt><dd>Ship B if conversion is significantly higher and no guardrail gets worse beyond an agreed limit. Otherwise keep A.</dd></div>
+    <div><dt>Decision rule</dt><dd>Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.</dd></div>
+    <div><dt>Before launch</dt><dd>Set the required sample size and test duration from the current conversion rate and the smallest improvement worth detecting.</dd></div>
     <div><dt>Events to track</dt><dd>onboarding_started, stage_selected, logo_selected, plan_viewed (variant, recommended plan), plan_selected (matches recommendation?), purchase_completed (variant, plan, billing cycle, amount).</dd></div>
     <div><dt>Status</dt><dd>Not run. This shows how I would validate the hypothesis, not a result.</dd></div>
   </dl></details>
@@ -400,12 +401,13 @@ function renderNotes(){
   <dl>
     ${row("Objective","Improve purchase conversion with a personalized onboarding-to-purchase experience.")}
     ${row("Problem","People arrive at very different stages, from an idea to a registered business. One default recommendation for everyone can lead to fewer purchases or the wrong plan.")}
-    ${row("Hypothesis","Recommending a plan based on the user's business stage will increase purchase conversion compared with the same default recommendation for everyone.")}
+    ${row("Hypothesis","Personalizing the plan recommendation and its supporting messaging based on users' business stage and stated needs will increase purchase conversion compared with a generic recommendation.")}
     ${row("Control (A)","Everyone sees the same plan marked Recommended.")}
     ${row("Treatment (B)","The recommendation adapts to the answers: the plan, a reason that quotes what the user said, highlighted features, and a reminder of the answers with a way to change them.")}
-    ${row("Primary metric","Purchase conversion: users who reach the plan screen and complete a purchase.")}
+    ${row("Primary metric","Plan-to-purchase conversion rate = unique users completing a purchase ÷ unique users exposed to the plan screen. This isolates the plan step, where the treatment is.")}
     ${row("Guardrails","Refund rate in the first 14 days, early cancellations, and average revenue per purchaser.")}
-    ${row("Decision rule","Ship B if conversion is significantly higher and no guardrail gets worse beyond an agreed limit. Otherwise keep A.")}
+    ${row("Decision rule","Ship B if it produces a statistically significant improvement in purchase conversion, with no material deterioration in refund rate, early cancellation rate, or revenue per purchaser. Otherwise keep A.")}
+    ${row("Before launch","Set the required sample size and test duration from the current conversion rate and the smallest improvement worth detecting.")}
     ${row("Events to track","onboarding_started, stage_selected, logo_selected, plan_viewed (variant, recommended plan), plan_selected (matches recommendation?), purchase_completed (variant, plan, billing cycle, amount).")}
     ${row("Status","Not run. This shows how I would validate the hypothesis, not a result.")}
   </dl></details>
