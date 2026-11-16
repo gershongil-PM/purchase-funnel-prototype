@@ -159,6 +159,21 @@ input[type=text]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 1p
 
 .walk{gap:14px}.walk ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:16px}.walk-note{margin:0;color:var(--muted)}
 
+/* Logo tools */
+.logo-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+.tool-btns{display:flex;gap:10px;flex-wrap:wrap}
+.tool{font:inherit;font-size:15px;display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;border:1px solid #B9BDC9;background:var(--surface);color:var(--ink);cursor:pointer}
+.tool:hover{border-color:var(--ink)}
+.tool svg{width:16px;height:16px;flex:none}
+.tool.spin svg{animation:spin .6s linear}
+.logo img{width:100%;height:100%;object-fit:contain}
+.mock-card .m img,.mock-avatar img{width:100%;height:100%;object-fit:contain}
+.upload-err{margin:0;font-size:14px;color:#C4314B}
+.round{font-size:13px;color:var(--muted)}
+.logos.regen>*{animation:fadeIn .45s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0) * 70ms)}
+@media (prefers-reduced-motion:reduce){.logos.regen>*{animation:none}.tool.spin svg{animation:none}}
+.checklist .mini{font:inherit;font-size:13px;font-weight:600;padding:5px 12px;border-radius:999px;border:0;background:var(--blue);color:#FFFFFF;cursor:pointer;white-space:nowrap}
+
 /* Launch step */
 .progress{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
 .progress .track{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
@@ -288,7 +303,7 @@ const SOURCES=[
 ];
 
 
-const S={step:0,name:"Juniper & Rye",tagline:"",industry:"food",stage:null,logoType:"all",logo:null,tier:null,cycle:12,addons:{domain:false,email:false,agent:false}};
+const S={step:0,name:"Juniper & Rye",tagline:"",industry:"food",stage:null,logoType:"all",logo:null,logoSeed:0,upload:null,uploadErr:"",tier:null,cycle:12,addons:{domain:false,email:false,agent:false}};
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const ind=()=>INDUSTRIES.find(i=>i.id===S.industry)||INDUSTRIES[0];
@@ -298,14 +313,24 @@ const CHECK=`<svg class="ico" viewBox="0 0 18 18" aria-hidden="true"><path d="M3
 const GIFT=`<svg class="gift" viewBox="0 0 18 18" aria-label="gift"><rect x="2.5" y="6.5" width="13" height="3" rx=".5" fill="none" stroke="#0B0B0F" stroke-width="1.3"/><rect x="3.5" y="9.5" width="11" height="6" fill="none" stroke="#0B0B0F" stroke-width="1.3"/><path d="M9 6.5v9M9 6.5C7.5 3.5 4.8 4 5.6 5.6 6 6.4 9 6.5 9 6.5zm0 0c1.5-3 4.2-2.5 3.4-.9C12 6.4 9 6.5 9 6.5z" fill="none" stroke="#0B0B0F" stroke-width="1.3"/></svg>`;
 const MB=`<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M4 11a7 7 0 1 0 2.1-5" fill="none" stroke="#0B0B0F" stroke-width="1.5" stroke-linecap="round"/><path d="M3.5 3.5v3.2h3.2" fill="none" stroke="#0B0B0F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><text x="11" y="15" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#0B0B0F">$</text></svg>`;
 
+const PALETTES=[["#2E5E4E","#E9B44C"],["#3B3F8F","#F28C6B"],["#8C2F39","#F4D58D"],["#14213D","#FCA311"],["#5F0F40","#FB8B24"],["#1D6A72","#F2C14E"]];
+const FONTS=[["Fraunces, Georgia, serif",600],["Bricolage Grotesque, Arial, sans-serif",800],["Inter, sans-serif",600]];
+function ff(k){const f=FONTS[(k+S.logoSeed)%FONTS.length];return `font-family="${f[0]}" font-weight="${f[1]}"`}
+function iconMark(a,b){
+  const v=S.logoSeed%3;
+  if(v===1) return `<g transform="translate(100 40)"><circle cx="-14" cy="6" r="11" fill="${a}"/><circle cx="14" cy="6" r="11" fill="${b}"/><circle cx="0" cy="-12" r="11" fill="${a}" opacity=".75"/></g>`;
+  if(v===2) return `<g transform="translate(100 42)"><rect x="-26" y="-14" width="26" height="26" rx="4" fill="${a}" transform="rotate(45 -13 -1)"/><rect x="0" y="-14" width="26" height="26" rx="4" fill="${b}" transform="rotate(45 13 -1)"/></g>`;
+  return `<g transform="translate(100 44)"><ellipse rx="9" ry="22" fill="${a}" transform="rotate(-30) translate(0 -6)"/><ellipse rx="9" ry="22" fill="${b}" transform="rotate(30) translate(0 -6)"/></g>`;
+}
+function logoArt(k){return k==="upload"?`<img src="${S.upload}" alt="Your uploaded logo">`:logoSVG(k)}
 function logoSVG(style){
-  const [a,b]=ind().c, n=esc(S.name||"Your business"), i=esc(initials()), tg=esc(S.tagline);
+  const [a,b]=S.logoSeed?PALETTES[(S.logoSeed*2+style)%PALETTES.length]:ind().c, n=esc(S.name||"Your business"), i=esc(initials()), tg=esc(S.tagline);
   const fs=Math.max(14,Math.min(28,300/Math.max(6,(S.name||"").length)));
   const tag=(y,size)=>tg?`<text x="100" y="${y}" text-anchor="middle" font-family="Inter, sans-serif" font-size="${size}" fill="#585C6E">${tg}</text>`:"";
-  if(style===0) return `<svg viewBox="0 0 200 150" role="img" aria-label="Badge logo"><circle cx="100" cy="58" r="42" fill="${a}"/><circle cx="100" cy="58" r="35" fill="none" stroke="${b}" stroke-width="2"/><text x="100" y="70" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="32" fill="#FFFFFF">${i}</text><text x="100" y="124" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="${fs*.75}" fill="#0B0B0F">${n}</text>${tag(140,9)}</svg>`;
-  if(style===1) return `<svg viewBox="0 0 200 150" role="img" aria-label="Icon and name logo"><g transform="translate(100 44)"><ellipse rx="9" ry="22" fill="${a}" transform="rotate(-30) translate(0 -6)"/><ellipse rx="9" ry="22" fill="${b}" transform="rotate(30) translate(0 -6)"/></g><text x="100" y="104" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-weight="800" font-size="${fs}" fill="#0B0B0F" letter-spacing="-0.5">${n}</text>${tag(124,10)}</svg>`;
-  if(style===2) return `<svg viewBox="0 0 200 150" role="img" aria-label="Monogram logo"><rect x="22" y="43" width="56" height="56" rx="10" fill="#0B0B0F"/><text x="50" y="81" text-anchor="middle" font-family="Bricolage Grotesque, Arial, sans-serif" font-weight="800" font-size="26" fill="${b}">${i}</text><text x="88" y="76" font-family="Inter, sans-serif" font-weight="600" font-size="${Math.min(16,fs*.62)}" fill="#0B0B0F">${n}</text>${tg?`<text x="88" y="92" font-family="Inter, sans-serif" font-size="9" fill="#585C6E">${tg}</text>`:""}</svg>`;
-  return `<svg viewBox="0 0 200 150" role="img" aria-label="Name-only logo"><text x="100" y="78" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="${fs*1.05}" fill="${a}">${n}</text><line x1="70" y1="92" x2="130" y2="92" stroke="${b}" stroke-width="3" stroke-linecap="round"/>${tag(112,10)}</svg>`;
+  if(style===0) return `<svg viewBox="0 0 200 150" role="img" aria-label="Badge logo"><circle cx="100" cy="58" r="42" fill="${a}"/><circle cx="100" cy="58" r="35" fill="none" stroke="${b}" stroke-width="2"/><text x="100" y="70" text-anchor="middle" ${ff(0)} font-size="32" fill="#FFFFFF">${i}</text><text x="100" y="124" text-anchor="middle" ${ff(0)} font-size="${fs*.75}" fill="#0B0B0F">${n}</text>${tag(140,9)}</svg>`;
+  if(style===1) return `<svg viewBox="0 0 200 150" role="img" aria-label="Icon and name logo">${iconMark(a,b)}<text x="100" y="104" text-anchor="middle" ${ff(1)} font-size="${fs}" fill="#0B0B0F" letter-spacing="-0.5">${n}</text>${tag(124,10)}</svg>`;
+  if(style===2) return `<svg viewBox="0 0 200 150" role="img" aria-label="Monogram logo"><rect x="22" y="43" width="56" height="56" rx="10" fill="#0B0B0F"/><text x="50" y="81" text-anchor="middle" ${ff(1)} font-size="26" fill="${b}">${i}</text><text x="88" y="76" ${ff(2)} font-size="${Math.min(16,fs*.62)}" fill="#0B0B0F">${n}</text>${tg?`<text x="88" y="92" font-family="Inter, sans-serif" font-size="9" fill="#585C6E">${tg}</text>`:""}</svg>`;
+  return `<svg viewBox="0 0 200 150" role="img" aria-label="Name-only logo"><text x="100" y="78" text-anchor="middle" ${ff(0)} font-size="${fs*1.05}" fill="${a}">${n}</text><line x1="70" y1="92" x2="130" y2="92" stroke="${b}" stroke-width="3" stroke-linecap="round"/>${tag(112,10)}</svg>`;
 }
 
 const CYCLES=[{n:1,label:"Monthly",every:"every month"},{n:12,label:"Yearly",every:"every year"},{n:24,label:"2 years",every:"every 2 years"},{n:36,label:"3 years",every:"every 3 years"}];
@@ -368,12 +393,19 @@ function render(entering){
   if(S.step===2){
     const shown=LOGOS.map((l,k)=>({...l,k})).filter(l=>S.logoType==="all"||l.type===S.logoType);
     h=`<div style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">Designed for ${esc(ind().label.toLowerCase())}</span><h1>Pick a starting point for ${esc(S.name)}</h1></div>
-    <div class="typefilter" aria-label="Logo type">${[["all","All"],["icon","Icon"],["name","Name"],["initials","Initials"]].map(([v,l])=>`<button class="chip" data-ltype="${v}" aria-pressed="${S.logoType===v}">${l}</button>`).join("")}</div>
-    <div class="logos" role="radiogroup" aria-label="Logo options">${shown.map(l=>`<div class="logo-wrap"><button class="logo" role="radio" data-logo="${l.k}" aria-checked="${S.logo===l.k}">${logoSVG(l.k)}</button><span class="logo-type">${l.label}</span></div>`).join("")}</div>
+    <div class="logo-tools"><div class="typefilter" aria-label="Logo type">${[["all","All"],["icon","Icon"],["name","Name"],["initials","Initials"]].map(([v,l])=>`<button class="chip" data-ltype="${v}" aria-pressed="${S.logoType===v}">${l}</button>`).join("")}</div>
+      <div class="tool-btns">
+        <button class="tool" id="regen"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12.5 1.5v3h-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Regenerate</button>
+        <label class="tool" for="logoFile"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 11V2.5M4.5 6 8 2.5 11.5 6M2.5 11v2.5h11V11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Upload your own</label>
+        <input type="file" id="logoFile" accept="image/png,image/jpeg,image/svg+xml,image/webp" hidden>
+      </div></div>
+    ${S.uploadErr?`<p class="upload-err" role="alert">${esc(S.uploadErr)}</p>`:""}
+    ${S.logoSeed?`<span class="round">Round ${S.logoSeed+1} of logo ideas</span>`:""}
+    <div class="logos" id="logoGrid" role="radiogroup" aria-label="Logo options">${S.upload?`<div class="logo-wrap"><button class="logo" role="radio" data-logo="upload" aria-checked="${S.logo==="upload"}">${logoArt("upload")}</button><span class="logo-type">Your logo</span></div>`:""}${shown.map(l=>`<div class="logo-wrap"><button class="logo" role="radio" data-logo="${l.k}" aria-checked="${S.logo===l.k}">${logoSVG(l.k)}</button><span class="logo-type">${l.label}</span></div>`).join("")}</div>
     ${S.logo!==null?`<div style="display:flex;flex-direction:column;gap:10px"><span class="mock-label">How it looks in the real world</span><div class="mockups">
-      <div class="mock-card"><div class="m">${logoSVG(S.logo)}</div><div><b style="font-size:13px">${esc(S.name)}</b><small>hello@${esc(domainName())}</small></div></div>
-      <div class="mock-avatar">${logoSVG(S.logo)}</div></div></div>`:`<p class="mock-label" style="margin:0">Tap a logo to see it on a business card and a social profile.</p>`}
-    ${actions("Use this logo",S.logo!==null)}`;
+      <div class="mock-card"><div class="m">${logoArt(S.logo)}</div><div><b style="font-size:13px">${esc(S.name)}</b><small>hello@${esc(domainName())}</small></div></div>
+      <div class="mock-avatar">${logoArt(S.logo)}</div></div></div>`:`<p class="mock-label" style="margin:0">Tap a logo to see it on a business card and a social profile.</p>`}
+    <div class="actions"><button class="btn ghost" id="back">Back</button><div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><button class="btn link" id="later">Decide later</button><button class="btn primary" id="next" ${S.logo!==null?"":"disabled"}>Use this logo</button></div></div>`;
   }
   if(S.step===3){
     const rec=S.stage?REC[S.stage]:null; if(!S.tier) S.tier=rec?rec.tier:"launch";
@@ -404,16 +436,16 @@ function render(entering){
   if(S.step===4){
     const t=TIERS.find(x=>x.id===S.tier);
     const items=[
-      {c:"ok",t:"Logo and brand kit",s:"High-res files unlocked",tag:"Done"},
+      S.logo===null?{c:"",t:"Choose your logo",s:"Your logo ideas are saved. Pick one or upload your own whenever you're ready.",tag:"Next step",next:true,btn:true}:{c:"ok",t:"Logo and brand kit",s:S.logo==="upload"?"Your logo is saved in your brand kit":"High-res files unlocked",tag:"Done"},
       ...(hasLLC()?[{c:"wip",t:"LLC formation",s:"Filed with the state. Waiting for approval.",tag:"In progress"},{c:"",t:"Get your EIN (tax ID)",s:"Requested once your LLC is approved",tag:""}]:[]),
-      ...(hasSite()?[{c:"",t:"Publish your website",s:"Suggested pages for you: "+ind().pages.join(", "),tag:"Next step",next:true}]:[]),
+      ...(hasSite()?[{c:"",t:"Publish your website",s:"Suggested pages for you: "+ind().pages.join(", "),tag:S.logo===null?"":"Next step",next:S.logo!==null}]:[]),
       {c:"",t:"Open a business bank account",s:hasLLC()?"Right here once your EIN arrives. Your company details carry over.":"Keep business and personal money separate",tag:""}
     ];
     const done=items.filter(i=>i.c==="ok").length;
     h=`<div style="display:flex;flex-direction:column;gap:12px"><span class="eyebrow">Welcome to ${t.name}</span><h1>${esc(S.name)} is on its way</h1></div>
     <div class="progress"><span>${done} of ${items.length} done</span><div class="track"><div class="fill" style="width:${done/items.length*100}%"></div></div></div>
-    <ul class="checklist">${items.map(i=>`<li class="${i.c}"><span class="st"></span><div><b>${i.t}</b><span class="sub">${esc(i.s)}</span></div>${i.tag?`<span class="tag ${i.next?"next":i.c}">${i.tag}</span>`:"<span></span>"}</li>`).join("")}</ul>
-    <div class="actions"><button class="btn ghost" id="restart">Start over</button><button class="btn primary" id="cta">${hasSite()?"Publish my website":"Download logo files"}</button></div>`;
+    <ul class="checklist">${items.map(i=>`<li class="${i.c}"><span class="st"></span><div><b>${i.t}</b><span class="sub">${esc(i.s)}</span></div>${i.btn?`<button class="mini" data-goto-logo>Choose now</button>`:i.tag?`<span class="tag ${i.next?"next":i.c}">${i.tag}</span>`:"<span></span>"}</li>`).join("")}</ul>
+    <div class="actions"><button class="btn ghost" id="restart">Start over</button><button class="btn primary" id="cta">${S.logo===null?"Choose my logo":hasSite()?"Publish my website":"Download logo files"}</button></div>`;
   }
   st.innerHTML=h; stagger(st,entering); bind();
 }
@@ -451,15 +483,27 @@ function bind(){
   q("[data-ind]",e=>{S.industry=e.dataset.ind;render()});
   q("[data-stage]",e=>{S.stage=e.dataset.stage;S.tier=null;render()});
   q("[data-ltype]",e=>{S.logoType=e.dataset.ltype;render()});
-  q("[data-logo]",e=>{S.logo=+e.dataset.logo;render()});
+  q("[data-logo]",e=>{S.logo=e.dataset.logo==="upload"?"upload":+e.dataset.logo;render()});
+  const rg=$("#regen"); if(rg) rg.onclick=()=>{
+    S.logoSeed++; if(S.logo!=="upload") S.logo=null; S.uploadErr=""; render();
+    $("#regen").classList.add("spin"); const g=$("#logoGrid"); [...g.children].forEach((c,i)=>c.style.setProperty("--i",i)); g.classList.add("regen");
+  };
+  const lf=$("#logoFile"); if(lf) lf.onchange=()=>{
+    const f=lf.files[0]; if(!f) return;
+    if(!/^image\/(png|jpeg|svg\+xml|webp)$/.test(f.type)){S.uploadErr="That file type isn't supported. Upload a PNG, JPG, SVG or WebP image.";render();return}
+    if(f.size>5*1024*1024){S.uploadErr="That file is over 5 MB. Upload a smaller image.";render();return}
+    const r=new FileReader(); r.onload=()=>{S.upload=r.result;S.logo="upload";S.uploadErr="";render()}; r.onerror=()=>{S.uploadErr="We couldn't read that file. Try another image.";render()}; r.readAsDataURL(f);
+  };
+  const lt=$("#later"); if(lt) lt.onclick=()=>{S.logo=null;go(1)};
+  q("[data-goto-logo]",()=>go(2-S.step));
   q("[data-tier]",e=>{S.tier=e.dataset.tier;render()});
   q("[data-cycle]",e=>{S.cycle=+e.dataset.cycle;render()});
   const ad=$("#adDomain"),ae=$("#adEmail"),aa=$("#adAgent");
   if(ad&&!ad.disabled) ad.onchange=()=>{S.addons.domain=ad.checked;render()};
   if(ae) ae.onchange=()=>{S.addons.email=ae.checked;render()};
   if(aa) aa.onchange=()=>{S.addons.agent=aa.checked;render()};
-  const r=$("#restart"); if(r) r.onclick=()=>{Object.assign(S,{stage:null,logo:null,logoType:"all",tier:null,addons:{domain:false,email:false,agent:false}});go(-S.step)};
-  const c=$("#cta"); if(c) c.onclick=()=>{c.textContent="Done in the real product";c.disabled=true};
+  const r=$("#restart"); if(r) r.onclick=()=>{Object.assign(S,{stage:null,logo:null,logoSeed:0,upload:null,uploadErr:"",logoType:"all",tier:null,addons:{domain:false,email:false,agent:false}});go(-S.step)};
+  const c=$("#cta"); if(c) c.onclick=()=>{if(S.logo===null){go(2-S.step);return}c.textContent="Done in the real product";c.disabled=true};
 }
 $("#notesToggle").addEventListener("change",e=>{$("#notes").hidden=!e.target.checked;$("#grid").classList.toggle("no-notes",!e.target.checked)});
 render();
